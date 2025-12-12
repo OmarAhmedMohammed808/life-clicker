@@ -36,346 +36,63 @@
     }
 
     /* ---------- Floating background bubbles ---------- */
-    .bubbles {
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      mix-blend-mode:screen;
-      z-index:0;
-    }
-    .bubble {
-      position:absolute;
-      border-radius:50%;
-      filter: blur(10px);
-      opacity:0.12;
-      animation: floatUp linear infinite;
-      transform: translate3d(0,0,0);
-    }
-    @keyframes floatUp {
-      from { transform: translateY(20vh) scale(1); opacity:0.12; }
-      to   { transform: translateY(-30vh) scale(1.2); opacity:0.02; }
-    }
+    .bubbles { position:absolute; inset:0; pointer-events:none; overflow:hidden; mix-blend-mode:screen; z-index:0; }
+    .bubble { position:absolute; border-radius:50%; filter: blur(10px); opacity:0.12; animation: floatUp linear infinite; transform: translate3d(0,0,0); }
+    @keyframes floatUp { from { transform: translateY(20vh) scale(1); opacity:0.12; } to { transform: translateY(-30vh) scale(1.2); opacity:0.02; } }
 
     /* ---------- HUD (score / instructions) ---------- */
-    .hud {
-      z-index:3;
-      display:flex;
-      gap:18px;
-      align-items:center;
-      width:100%;
-      padding:14px 22px;
-      justify-content:space-between;
-      pointer-events:none;
-    }
-    .panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border-radius:14px;
-      padding:10px 16px;
-      backdrop-filter: blur(6px) saturate(120%);
-      box-shadow: 0 6px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
-      display:flex;
-      gap:12px;
-      align-items:center;
-      pointer-events:auto;
-    }
-    .score {
-      font-size:28px;
-      font-weight:700;
-      letter-spacing: -0.02em;
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .score .value {
-      background: linear-gradient(90deg,#e6fbff, #a6e5ff);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color: transparent;
-      font-weight:800;
-      font-size:40px;
-      transition: transform 220ms cubic-bezier(.2,.9,.2,1);
-      transform-origin:center;
-    }
-    .meta {
-      font-size:13px;
-      color:rgba(234,246,255,0.8);
-      opacity:0.9;
-    }
-    .instructions {
-      opacity:0.9;
-      font-size:14px;
-      color:rgba(234,246,255,0.85);
-    }
+    .hud { z-index:3; display:flex; gap:18px; align-items:center; width:100%; padding:14px 22px; justify-content:space-between; pointer-events:none; }
+    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:14px; padding:10px 16px; backdrop-filter: blur(6px) saturate(120%); box-shadow: 0 6px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); display:flex; gap:12px; align-items:center; pointer-events:auto; }
+    .score { font-size:28px; font-weight:700; letter-spacing: -0.02em; display:flex; gap:8px; align-items:center; }
+    .score .value { background: linear-gradient(90deg,#e6fbff, #a6e5ff); -webkit-background-clip:text; background-clip:text; color: transparent; font-weight:800; font-size:40px; transition: transform 220ms cubic-bezier(.2,.9,.2,1); transform-origin:center; }
+    .meta { font-size:13px; color:rgba(234,246,255,0.8); opacity:0.9; }
+    .instructions { opacity:0.9; font-size:14px; color:rgba(234,246,255,0.85); }
 
     /* ---------- Count bar (replaces inventory icons) ---------- */
-    .countbar {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      min-width:240px;
-      max-width:420px;
-    }
-    .countbar .bar {
-      position:relative;
-      height:14px;
-      border-radius:999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
-      border:1px solid rgba(255,255,255,0.04);
-      overflow:hidden;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-    .countbar .fill {
-      position:absolute;
-      left:0; top:0; bottom:0;
-      width:0%;
-      background: linear-gradient(90deg, #7fe7ff, #38b7ff);
-      box-shadow: 0 6px 18px rgba(54,173,255,0.18);
-      transition: width 240ms cubic-bezier(.2,.9,.2,1);
-    }
-    .countbar .label {
-      display:flex;
-      justify-content:space-between;
-      font-size:12px;
-      color:rgba(235,255,255,0.9);
-      font-weight:700;
-    }
-    .countbar .label .left { opacity:0.95; }
-    .countbar .label .right { opacity:0.78; font-weight:800; }
+    .countbar { display:flex; flex-direction:column; gap:8px; min-width:240px; max-width:420px; }
+    .bar { position:relative; height:14px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.04); overflow:hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
+    .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg, #7fe7ff, #38b7ff); box-shadow: 0 6px 18px rgba(54,173,255,0.18); transition: width 240ms cubic-bezier(.2,.9,.2,1); }
+    .label { display:flex; justify-content:space-between; font-size:12px; color:rgba(235,255,255,0.9); font-weight:700; }
 
     /* drops-per-second + per-click display */
-    .dps {
-      margin-top:6px;
-      font-size:13px;
-      color:#cfffff;
-      opacity:0.95;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .dps .dps-pill, .dps .click-pill {
-      background: linear-gradient(90deg,#1b5f79,#0f3d52);
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:800;
-      font-size:13px;
-      color:#bff6ff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-    }
+    .dps { margin-top:6px; font-size:13px; color:#cfffff; opacity:0.95; display:flex; align-items:center; gap:10px; }
+    .dps .dps-pill, .dps .click-pill { background: linear-gradient(90deg,#1b5f79,#0f3d52); padding:6px 10px; border-radius:999px; font-weight:800; font-size:13px; color:#bff6ff; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
 
     /* ---------- Sea & Ocean badges + Lins display ---------- */
     .badge-wrap { display:flex; gap:10px; align-items:center; }
-    .badge {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 10px;
-      border-radius:10px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border: 1px solid rgba(255,255,255,0.03);
-      font-weight:700;
-      color:#dff7ff;
-      font-size:14px;
-    }
-    .badge svg { width:28px; height:28px; display:block; }
-    .badge .num { font-weight:800; margin-left:6px; letter-spacing:-0.02em; }
+    .badge { display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.03); font-weight:700; color:#dff7ff; font-size:14px; }
+    .badge svg { width:28px; height:28px; display:block; } .badge .num { font-weight:800; margin-left:6px; letter-spacing:-0.02em; }
 
-    .badge.pulse { animation: pulseBadge 560ms cubic-bezier(.2,.9,.2,1); }
-    @keyframes pulseBadge {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.12); }
-      100% { transform: scale(1); }
-    }
+    .badge.pulse { animation: pulseBadge 560ms cubic-bezier(.2,.9,.2,1); } @keyframes pulseBadge { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
 
     /* ---------- Stage / center area ---------- */
-    .stage {
-      position:relative;
-      width:100%;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:2;
-      pointer-events:none;
-    }
+    .stage { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:2; pointer-events:none; }
 
     /* ---------- Drop wrapper ---------- */
-    .drop-wrap {
-      position:relative;
-      width:260px;
-      height:340px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:auto; /* allow clicks */
-    }
+    .drop-wrap { position:relative; width:260px; height:340px; display:flex; align-items:center; justify-content:center; pointer-events:auto; }
 
     /* ---------- Water drop button ---------- */
-    .drop {
-      --size: 160px;
-      width:var(--size);
-      height:calc(var(--size) * 1.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      cursor:pointer;
-      border-radius:50% 50% 45% 45%;
-      transform-origin:center bottom;
-      transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms;
-      will-change:transform;
-      z-index:5;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      filter: drop-shadow(0 18px 40px rgba(10,34,77,0.6));
-      pointer-events: auto;
-    }
+    .drop { --size:160px; width:var(--size); height:calc(var(--size) * 1.2); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; border-radius:50% 50% 45% 45%; transform-origin:center bottom; transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms; will-change:transform; z-index:5; user-select:none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 18px 40px rgba(10,34,77,0.6)); pointer-events: auto; }
+    .drop svg { width:100%; height:100%; display:block; pointer-events:none; } .drop:active { transform: scale(0.96); }
+    @keyframes bob { 0% { transform: translateY(-6px) rotate(-1deg); } 50% { transform: translateY(6px) rotate(1deg); } 100% { transform: translateY(-6px) rotate(-1deg); } }
+    .drop { animation: bob 3.6s ease-in-out infinite; } .drop.wobble { animation: wobble 480ms cubic-bezier(.2,.9,.2,1); } @keyframes wobble { 0% { transform: scale(1); } 30% { transform: scale(0.78) rotate(-6deg); } 60% { transform: scale(1.08) rotate(6deg); } 100% { transform: scale(1); } }
 
-    /* IMPORTANT: let parent receive pointer events across the whole area */
-    .drop svg { width:100%; height:100%; display:block; pointer-events: none; }
-
-    .drop:active { transform: scale(0.96); }
-
-    /* drop float animation */
-    @keyframes bob {
-      0% { transform: translateY(-6px) rotate(-1deg); }
-      50% { transform: translateY(6px) rotate(1deg); }
-      100% { transform: translateY(-6px) rotate(-1deg); }
-    }
-    .drop { animation: bob 3.6s ease-in-out infinite; }
-
-    /* wobble (triggered on click) */
-    .drop.wobble { animation: wobble 480ms cubic-bezier(.2,.9,.2,1); }
-    @keyframes wobble {
-      0% { transform: scale(1); }
-      30% { transform: scale(0.78) rotate(-6deg); }
-      60% { transform: scale(1.08) rotate(6deg); }
-      100% { transform: scale(1); }
-    }
-
-    /* ripple ring created on click */
-    .ripple {
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) scale(0);
-      width:40%;
-      height:40%;
-      border-radius:50%;
-      border: 2px solid rgba(166,229,255,0.35);
-      pointer-events:none;
-      z-index:4;
-      animation: ripple 700ms cubic-bezier(.2,.9,.2,1);
-      backdrop-filter: blur(2px);
-    }
-    @keyframes ripple {
-      0% { transform: translate(-50%,-50%) scale(0); opacity:0.9; }
-      70% { transform: translate(-50%,-50%) scale(1.6); opacity:0.18; }
-      100% { opacity:0; transform: translate(-50%,-50%) scale(1.8); }
-    }
-
-    /* tiny sparkle on click */
-    .spark {
-      position:absolute;
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.9);
-      box-shadow:0 0 12px 4px rgba(255,255,255,0.18);
-      transform:translate(-50%,-50%) scale(0);
-      animation: sparkPop 420ms ease-out forwards;
-      z-index:6;
-      pointer-events:none;
-    }
-    @keyframes sparkPop {
-      0% { transform: translate(-50%,-50%) scale(0); opacity:1; }
-      60% { transform: translate(-50%,-50%) scale(1.6); opacity:1; }
-      100% { transform: translate(-50%,-50%) scale(0.6); opacity:0; }
-    }
+    .ripple { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); width:40%; height:40%; border-radius:50%; border: 2px solid rgba(166,229,255,0.35); pointer-events:none; z-index:4; animation: ripple 700ms cubic-bezier(.2,.9,.2,1); } @keyframes ripple { 0% { transform: translate(-50%,-50%) scale(0); opacity:0.9; } 70% { transform: translate(-50%,-50%) scale(1.6); opacity:0.18; } 100% { opacity:0; transform: translate(-50%,-50%) scale(1.8); } }
+    .spark { position:absolute; width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.9); box-shadow:0 0 12px 4px rgba(255,255,255,0.18); transform:translate(-50%,-50%) scale(0); animation: sparkPop 420ms ease-out forwards; z-index:6; pointer-events:none; } @keyframes sparkPop { 0% { transform: translate(-50%,-50%) scale(0); opacity:1; } 60% { transform: translate(-50%,-50%) scale(1.6); opacity:1; } 100% { transform: translate(-50%,-50%) scale(0.6); opacity:0; } }
 
     /* footer / controls */
-    .footer {
-      z-index:3;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:center;
-      opacity:0.95;
-      pointer-events:auto;
-    }
-    .btn {
-      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.04);
-      padding:8px 12px;
-      color:#dff7ff;
-      font-weight:600;
-      cursor:pointer;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
-    .btn:active { transform: translateY(1px); }
+    .footer { z-index:3; display:flex; gap:12px; align-items:center; justify-content:center; opacity:0.95; pointer-events:auto; }
+    .btn { background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:10px; border:1px solid rgba(255,255,255,0.04); padding:8px 12px; color:#dff7ff; font-weight:600; cursor:pointer; display:inline-flex; gap:8px; align-items:center; } .btn:active { transform: translateY(1px); }
 
     /* shop modal (market) */
-    .shop {
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:12; /* above other UI */
-      background: linear-gradient(180deg, rgba(2,7,12,0.56), rgba(2,7,12,0.66));
-      color:#eaffff;
-      padding:20px;
-      gap:12px;
-      flex-direction:column;
-      backdrop-filter: blur(4px) saturate(120%);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity 240ms ease, transform 240ms ease;
-      transform: translateY(8px) scale(0.995);
-    }
-    .shop.show { opacity:1; pointer-events:auto; transform: translateY(0) scale(1); }
-
-    .shop .card {
-      width:min(720px, 92vw);
-      max-height:78vh;
-      overflow:auto;
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:18px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.6);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .shop .header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-    .shop .title { font-size:20px; font-weight:800; }
-    .shop .close { background:transparent; border:0; color:#c9fbff; font-weight:700; cursor:pointer; padding:8px 10px; border-radius:8px; }
-    .shop .content { display:flex; flex-direction:column; gap:12px; }
-
+    .shop { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:12; background: linear-gradient(180deg, rgba(2,7,12,0.56), rgba(2,7,12,0.66)); color:#eaffff; padding:20px; gap:12px; flex-direction:column; backdrop-filter: blur(4px) saturate(120%); opacity:0; pointer-events:none; transition: opacity 240ms ease, transform 240ms ease; transform: translateY(8px) scale(0.995); } .shop.show { opacity:1; pointer-events:auto; transform: translateY(0) scale(1); }
+    .shop .card { width:min(720px, 92vw); max-height:78vh; overflow:auto; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:18px; box-shadow: 0 18px 50px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:12px; }
     .shop-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start; }
     .shop-item { padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(10,30,50,0.08), rgba(10,30,50,0.04)); border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:8px; }
-    .shop-item .title { font-weight:800; font-size:15px; } .shop-item .cost { color:#cfffff; font-weight:700; font-size:13px; opacity:0.95; } .shop-item .buy { margin-top:6px; padding:10px 12px; background: linear-gradient(90deg,#37c0ff,#66e9ff); color:#012233; border:0; border-radius:8px; font-weight:800; cursor:pointer; } .shop-item .buy:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .shop-item .buy { margin-top:6px; padding:10px 12px; background: linear-gradient(90deg,#37c0ff,#66e9ff); color:#012233; border:0; border-radius:8px; font-weight:800; cursor:pointer; }
+    .shop-item .buy:disabled { opacity:0.5; cursor:not-allowed; }
 
-    @media (max-width:540px) {
-      .drop-wrap { width:200px; height:260px; }
-      .drop { --size: 120px; }
-      .score .value { font-size:34px; }
-      .badge svg { width:22px; height:22px; }
-      .countbar { min-width:180px; max-width:260px; }
-      .shop .card { width:92vw; padding:12px; }
-      .shop .title { font-size:18px; }
-      .shop-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width:540px) { .drop-wrap { width:200px; height:260px; } .drop { --size: 120px; } .score .value { font-size:34px; } .badge svg { width:22px; height:22px; } .countbar { min-width:180px; max-width:260px; } .shop .card { width:92vw; padding:12px; } .shop-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -392,7 +109,6 @@
               <div style="font-size:14px;opacity:0.8;">drops</div>
             </div>
 
-            <!-- Simplified count bar (only the count/progress bar) -->
             <div style="display:flex;flex-direction:column">
               <div class="countbar" aria-hidden="false" aria-label="Water count and progress">
                 <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="0" id="countBar">
@@ -404,13 +120,12 @@
                 </div>
               </div>
 
-              <!-- DPS + per-click display under water count -->
               <div class="dps" aria-live="polite">
                 <div>Income:</div>
                 <div class="dps-pill" id="dpsPill">0 /sec</div>
                 <div style="width:8px"></div>
                 <div>Per click:</div>
-                <div class="dps-pill" id="clickPill">1</div>
+                <div class="click-pill" id="clickPill">1</div>
               </div>
             </div>
 
@@ -422,47 +137,19 @@
         <div style="display:flex;flex-direction:column;align-items:flex-end">
           <div class="instructions">Click the drop to collect water — each click = your current per-click value</div>
 
-          <!-- Sea & Ocean badges + Lins -->
           <div class="badge-wrap" style="margin-top:8px;">
             <div class="badge" id="seaBadge" title="Seas">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="seaG" x1="0" x2="1" y1="0" y2="1">
-                    <stop offset="0" stop-color="#7fe7ff"/>
-                    <stop offset="1" stop-color="#38b7ff"/>
-                  </linearGradient>
-                </defs>
-                <path d="M2 15c2.5-1.5 4 1 6 0s3 1.5 5 0 3.5 1.5 5 0v5H2v-5z" fill="url(#seaG)"></path>
-                <circle cx="8" cy="6" r="1.6" fill="#fff" opacity="0.9"></circle>
-              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="seaG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#7fe7ff"/><stop offset="1" stop-color="#38b7ff"/></linearGradient></defs><path d="M2 15c2.5-1.5 4 1 6 0s3 1.5 5 0 3.5 1.5 5 0v5H2v-5z" fill="url(#seaG)"></path><circle cx="8" cy="6" r="1.6" fill="#fff" opacity="0.9"></circle></svg>
               Sea <div class="num" id="seaCount">0</div>
             </div>
 
             <div class="badge" id="oceanBadge" title="Oceans">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="oceanG" x1="0" x2="1" y1="0" y2="1">
-                    <stop offset="0" stop-color="#b4fff6"/>
-                    <stop offset="1" stop-color="#45e0ff"/>
-                  </linearGradient>
-                </defs>
-                <path d="M2 14c3-2 5 1 8 0 3-1.2 4.5 1.5 7 0v6H2v-6z" fill="url(#oceanG)"></path>
-                <circle cx="16" cy="5" r="1.8" fill="#fff" opacity="0.95"></circle>
-              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="oceanG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#b4fff6"/><stop offset="1" stop-color="#45e0ff"/></linearGradient></defs><path d="M2 14c3-2 5 1 8 0 3-1.2 4.5 1.5 7 0v6H2v-6z" fill="url(#oceanG)"></path><circle cx="16" cy="5" r="1.8" fill="#fff" opacity="0.95"></circle></svg>
               Ocean <div class="num" id="oceanCount">0</div>
             </div>
 
             <div class="badge" id="linsBadge" title="Lins">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="linsG" x1="0" x2="1" y1="0" y2="1">
-                    <stop offset="0" stop-color="#fff8c8"/>
-                    <stop offset="1" stop-color="#ffd46b"/>
-                  </linearGradient>
-                </defs>
-                <circle cx="12" cy="12" r="9" fill="url(#linsG)"></circle>
-                <text x="12" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#28343b">L</text>
-              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="linsG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff8c8"/><stop offset="1" stop-color="#ffd46b"/></linearGradient></defs><circle cx="12" cy="12" r="9" fill="url(#linsG)"></circle><text x="12" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#28343b">L</text></svg>
               Lins <div class="num" id="linsCount">0</div>
             </div>
           </div>
@@ -473,45 +160,17 @@
 
     <main class="stage" role="main">
       <div class="drop-wrap" id="dropWrap">
-        <!-- The interactive drop button (SVG) -->
         <div class="drop" id="drop" role="button" aria-pressed="false" tabindex="0" aria-label="Collect water drop">
-          <!-- SVG water drop with gradients and highlights -->
           <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
-              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stop-color="#9fe9ff"/>
-                <stop offset="0.5" stop-color="#5ad0ff"/>
-                <stop offset="1" stop-color="#2aa6ff"/>
-              </linearGradient>
-              <radialGradient id="g2" cx="35%" cy="25%" r="65%">
-                <stop offset="0" stop-color="rgba(255,255,255,0.95)"/>
-                <stop offset="1" stop-color="rgba(255,255,255,0)"/>
-              </radialGradient>
-              <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#05283b" flood-opacity="0.55"/>
-              </filter>
+              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#9fe9ff"/><stop offset="0.5" stop-color="#5ad0ff"/><stop offset="1" stop-color="#2aa6ff"/></linearGradient>
+              <radialGradient id="g2" cx="35%" cy="25%" r="65%"><stop offset="0" stop-color="rgba(255,255,255,0.95)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
             </defs>
-
-            <!-- base drop shape -->
-            <path d="M100 6
-                     C80 34, 26 96, 26 140
-                     C26 180, 62 216, 100 216
-                     C138 216, 174 180, 174 140
-                     C174 96, 120 34, 100 6 Z"
-                  fill="url(#g1)" stroke="rgba(255,255,255,0.08)" stroke-width="1.6" filter="url(#shadow)"/>
-
-            <!-- highlight -->
-            <path d="M92 18 C82 34, 54 72, 54 110 C56 150, 86 172, 98 172" fill="none" stroke="rgba(255,255,255,0.9)" stroke-linecap="round" stroke-width="10" opacity="0.12" stroke-linejoin="round"/>
-
-            <!-- glossy front -->
+            <path d="M100 6 C80 34, 26 96, 26 140 C26 180, 62 216, 100 216 C138 216, 174 180, 174 140 C174 96, 120 34, 100 6 Z" fill="url(#g1)" stroke="rgba(255,255,255,0.08)" stroke-width="1.6"/>
             <ellipse cx="76" cy="68" rx="34" ry="52" fill="url(#g2)" opacity="0.88"/>
-
-            <!-- subtle inner shine -->
-            <path d="M120 24 C110 48, 80 86, 68 112" stroke="rgba(255,255,255,0.28)" stroke-width="6" fill="none" stroke-linecap="round"/>
-          </svg>
+        </svg>
         </div>
 
-        <!-- canvas for particle splashes -->
         <canvas id="canvas" style="position:absolute;inset:0;z-index:4;pointer-events:none;"></canvas>
       </div>
     </main>
@@ -521,32 +180,27 @@
       <button class="btn" id="soundToggle">Sound: On</button>
     </div>
 
-    <!-- Shop / Market overlay -->
     <div id="shopOverlay" class="shop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="shopTitle">
       <div class="card" role="document">
         <div class="header">
           <div class="title" id="shopTitle">Market</div>
-          <div>
-            <button class="close" id="shopClose" aria-label="Close market">Close</button>
-          </div>
+          <div><button class="close" id="shopClose" aria-label="Close market">Close</button></div>
         </div>
 
         <div class="content" id="shopContent">
-          <!-- Converter row -->
-          <div class="converter" id="converterRow">
-            <div class="desc">
-              <div style="font-weight:800;font-size:15px">Converter — Water to Lins</div>
-              <div class="price">Exchange: 100 Water Drops → 10 Lins</div>
+          <div class="converter" id="converterRow" style="display:flex;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(10,30,50,0.06),rgba(10,30,50,0.03));border:1px solid rgba(255,255,255,0.03)">
+            <div style="display:flex;flex-direction:column">
+              <div style="font-weight:800;font-size:15px">Converter — Water → Lins</div>
+              <div style="font-size:13px;color:#cfffff">100 Water → 10 Lins</div>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
               <div style="font-size:12px;color:rgba(220,255,255,0.9)">You have: <strong id="shopWaterCount">0</strong> water</div>
-              <button class="btn-convert" id="convertBtn">Convert 100 → +10 Lins</button>
+              <button class="btn-convert" id="convertBtn" style="background:linear-gradient(90deg,#37c0ff,#66e9ff);color:#012233;border:0;padding:8px 12px;border-radius:8px;font-weight:800;">Convert</button>
             </div>
           </div>
 
           <div class="status" id="shopStatus">The shop is open.</div>
 
-          <!-- Shop grid with DPS and per-click upgrades -->
           <div class="shop-grid" style="margin-top:8px;">
             <div class="shop-item" id="itemDPS5">
               <div class="title">+5 Water Drops Per Second</div>
@@ -583,21 +237,19 @@
   </div>
 
   <script>
-    // ---------- Helper: DOM refs ----------
+    // ---------- DOM refs ----------
     const drop = document.getElementById('drop');
     const scoreEl = document.getElementById('score');
     const canvas = document.getElementById('canvas');
     const soundToggle = document.getElementById('soundToggle');
-    const scene = document.getElementById('scene');
     const bubblesContainer = document.getElementById('bubbles');
 
-    // Count bar elements
     const countBar = document.getElementById('countBar');
     const countFill = document.getElementById('countFill');
     const countLabelLeft = document.getElementById('countLabelLeft');
     const countLabelRight = document.getElementById('countLabelRight');
-    const dpsPill = document.getElementById('dpsPill');
-    const clickPill = document.getElementById('clickPill');
+    const dpsPill = document.getElementById('dpsPill') || document.createElement('div');
+    const clickPill = document.getElementById('clickPill') || document.createElement('div');
 
     const seaCountEl = document.getElementById('seaCount');
     const oceanCountEl = document.getElementById('oceanCount');
@@ -606,7 +258,6 @@
     const oceanBadge = document.getElementById('oceanBadge');
     const linsBadge = document.getElementById('linsBadge');
 
-    // Market/shop elements
     const marketBtn = document.getElementById('marketBtn');
     const shopOverlay = document.getElementById('shopOverlay');
     const shopClose = document.getElementById('shopClose');
@@ -614,17 +265,17 @@
     const shopWaterCount = document.getElementById('shopWaterCount');
     const convertBtn = document.getElementById('convertBtn');
 
-    // New shop items
     const buyDPS5 = document.getElementById('buyDPS5');
     const buyDPS10 = document.getElementById('buyDPS10');
     const buyClick5 = document.getElementById('buyClick5');
     const buyClick10 = document.getElementById('buyClick10');
 
     // ---------- Game state ----------
-    let score = 0;         // water points
-    let seas = 0;          // seas
-    let oceans = 0;        // oceans
-    let lins = 0;          // new currency
+    let score = 0;
+    let seas = 0;
+    let oceans = 0;
+    let lins = 0;
+
     const WATER_PER_SEA = 200;
     const SEAS_PER_OCEAN = 50;
     const MAX_OCEANS = 5;
@@ -632,25 +283,19 @@
     const CONVERT_WATER = 100;
     const CONVERT_LINS = 10;
 
-    // DPS upgrades
     let dropsPerSecond = 0;
-    const DPS5_COST = 50;
-    const DPS5_AMOUNT = 5;
-    const DPS10_COST = 100;
-    const DPS10_AMOUNT = 10;
+    const DPS5_COST = 50, DPS5_AMOUNT = 5;
+    const DPS10_COST = 100, DPS10_AMOUNT = 10;
 
-    // per-click upgrades
-    let perClickBonus = 0; // additional drops per click
-    const CLICK5_COST = 50;
-    const CLICK5_AMOUNT = 5;
-    const CLICK10_COST = 100;
-    const CLICK10_AMOUNT = 10;
+    let perClickBonus = 0;
+    const CLICK5_COST = 50, CLICK5_AMOUNT = 5;
+    const CLICK10_COST = 100, CLICK10_AMOUNT = 10;
     const BASE_CLICK = 1;
 
     let soundOn = true;
     let gameOver = false;
 
-    // ---------- Responsive canvas ----------
+    // ---------- Canvas / particles ----------
     let ctx, DPR = Math.max(1, window.devicePixelRatio || 1);
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
@@ -662,7 +307,6 @@
       ctx.scale(DPR, DPR);
     }
 
-    // ---------- Particles ----------
     const particles = [];
     function spawnParticles(x,y,count=22) {
       for (let i=0;i<count;i++) {
@@ -686,7 +330,7 @@
       ctx.clearRect(0,0,canvas.width/DPR, canvas.height/DPR);
       for (let i = particles.length-1; i>=0; i--) {
         const p = particles[i];
-        p.vy += 0.18; // gravity
+        p.vy += 0.18;
         p.vx *= 0.995;
         p.x += p.vx;
         p.y += p.vy;
@@ -694,8 +338,6 @@
         p.alpha = 1 - p.life / p.maxLife;
         if (p.alpha < 0) p.alpha = 0;
         const r = p.radius * (1 - p.life / p.maxLife) * 1.1;
-
-        // draw droplet
         ctx.beginPath();
         const grad = ctx.createRadialGradient(p.x-2, p.y-2, 0, p.x, p.y, r*2);
         grad.addColorStop(0, `hsla(${p.hue}, 95%, 65%, ${Math.max(0.2, p.alpha)})`);
@@ -704,38 +346,32 @@
         ctx.moveTo(p.x, p.y);
         ctx.arc(p.x, p.y, r, 0, Math.PI*2);
         ctx.fill();
-
         if (p.life > p.maxLife) particles.splice(i,1);
       }
     }
 
-    // ---------- Animation loop ----------
     let raf;
     function loop() { renderParticles(); raf = requestAnimationFrame(loop); }
-
-    // ---------- Ripples & spark DOM effects ----------
-    function makeRipple() { const r = document.createElement('div'); r.className = 'ripple'; drop.appendChild(r); setTimeout(()=> r.remove(), 750); }
-    function makeSpark(xPct, yPct) { const s = document.createElement('div'); s.className = 'spark'; s.style.left = xPct + '%'; s.style.top = yPct + '%'; drop.appendChild(s); setTimeout(()=> s.remove(), 480); }
 
     // ---------- Audio ----------
     let audioCtx = null;
     function ensureAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playPop() { if (!soundOn) return; ensureAudio(); const t = audioCtx.currentTime; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(720 + Math.random()*200, t); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.08, t+0.008); g.gain.exponentialRampToValueAtTime(0.001, t+0.45); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+0.5); }
+    function playPop() { if (!soundOn) return; ensureAudio(); const t = audioCtx.currentTime; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(720 + Math.random()*200,t); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.08,t+0.008); g.gain.exponentialRampToValueAtTime(0.001,t+0.45); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+0.5); }
 
     // ---------- Helpers ----------
     function getClickValue() { return BASE_CLICK + perClickBonus; }
+    function makeRipple() { const r = document.createElement('div'); r.className = 'ripple'; drop.appendChild(r); setTimeout(()=> r.remove(), 750); }
+    function makeSpark(xPct, yPct) { const s = document.createElement('div'); s.className = 'spark'; s.style.left = xPct + '%'; s.style.top = yPct + '%'; drop.appendChild(s); setTimeout(()=> s.remove(), 480); }
+    function pulseBadge(el) { if (!el) return; el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); setTimeout(()=> el.classList.remove('pulse'), 700); }
 
-    // ---------- Persistent state (autosave) ----------
+    // ---------- Persistence (save/load/autosave) ----------
     const SAVE_KEY = 'waterclicker_v1';
+    let autosaveInterval = null;
     function saveState() {
       try {
         const state = {
-          score,
-          seas,
-          oceans,
-          lins,
-          dropsPerSecond,
-          perClickBonus,
+          score, seas, oceans, lins,
+          dropsPerSecond, perClickBonus,
           purchases: {
             dps5: buyDPS5.dataset.purchased === 'true',
             dps10: buyDPS10.dataset.purchased === 'true',
@@ -745,52 +381,36 @@
           timestamp: Date.now()
         };
         localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-        // small debug: update shop status briefly
-        // shopStatus.textContent = 'Saved';
-        // setTimeout(()=> shopStatus.textContent = 'The shop is open.', 800);
       } catch (err) {
         console.warn('Save failed', err);
       }
     }
-
     function loadState() {
       try {
         const raw = localStorage.getItem(SAVE_KEY);
         if (!raw) return;
-        const state = JSON.parse(raw);
-        if (!state) return;
-        // restore numeric fields (be defensive)
-        score = Number(state.score) || 0;
-        seas = Number(state.seas) || 0;
-        oceans = Number(state.oceans) || 0;
-        lins = Number(state.lins) || 0;
-        dropsPerSecond = Number(state.dropsPerSecond) || 0;
-        perClickBonus = Number(state.perClickBonus) || 0;
-        // restore purchases and UI
-        if (state.purchases) {
-          if (state.purchases.dps5) { buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true; }
-          if (state.purchases.dps10) { buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true; }
-          if (state.purchases.click5) { buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true; }
-          if (state.purchases.click10) { buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true; }
+        const s = JSON.parse(raw);
+        if (!s) return;
+        score = Number(s.score) || 0;
+        seas = Number(s.seas) || 0;
+        oceans = Number(s.oceans) || 0;
+        lins = Number(s.lins) || 0;
+        dropsPerSecond = Number(s.dropsPerSecond) || 0;
+        perClickBonus = Number(s.perClickBonus) || 0;
+        if (s.purchases) {
+          if (s.purchases.dps5) { buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true; }
+          if (s.purchases.dps10) { buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true; }
+          if (s.purchases.click5) { buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true; }
+          if (s.purchases.click10) { buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true; }
         }
-        // sync UI
-        updateAfterScoreChange();
-        updateBuyButtonsState();
       } catch (err) {
         console.warn('Load failed', err);
       }
     }
-
-    // Autosave every 30 seconds
-    let autosaveInterval = null;
-    function startAutosave() {
-      if (autosaveInterval) clearInterval(autosaveInterval);
-      autosaveInterval = setInterval(saveState, 30000); // 30s
-    }
-    // Save on page unload
+    function startAutosave() { if (autosaveInterval) clearInterval(autosaveInterval); autosaveInterval = setInterval(saveState, 30000); }
     window.addEventListener('beforeunload', saveState);
 
-    // ---------- Automatic conversions ----------
+    // ---------- Game conversion logic ----------
     function checkConversions() {
       if (gameOver) return;
       let converted = false;
@@ -807,36 +427,22 @@
         pulseBadge(oceanBadge);
       }
       if (converted) {
-        scoreEl.textContent = score;
-        updateCountBar();
-        updateBadgesUI();
+        updateAfterScoreChange();
         if (oceans >= MAX_OCEANS) {
           oceans = MAX_OCEANS;
-          // endGame still runs but no overlay visible
           endGame();
         }
       }
     }
 
-    function pulseBadge(el) {
-      if (!el) return;
-      el.classList.remove('pulse');
-      void el.offsetWidth;
-      el.classList.add('pulse');
-      setTimeout(()=> el.classList.remove('pulse'), 700);
-    }
-
-    // ---------- End game (no overlay) ----------
     function endGame() {
       gameOver = true;
       drop.setAttribute('aria-disabled', 'true');
       drop.style.cursor = 'default';
       drop.removeEventListener('pointerdown', onPointerDownWrapped);
       drop.tabIndex = -1;
-      // celebratory particles
       const rect = canvas.getBoundingClientRect();
       spawnParticles(rect.width/2, rect.height/4, 160);
-      // subtle sound
       if (soundOn) {
         ensureAudio();
         const t = audioCtx.currentTime;
@@ -853,33 +459,26 @@
         o1.start(t); o2.start(t);
         o1.stop(t+1.9); o2.stop(t+1.9);
       }
-      // save state when reaching end conditions
       saveState();
     }
 
-    // ---------- Click / interaction handler ----------
+    // ---------- Click handling ----------
     function handleCollect(clientX, clientY) {
       if (gameOver) return;
       const rect = canvas.getBoundingClientRect();
       const wrapRect = drop.getBoundingClientRect();
       const cx = (wrapRect.left + wrapRect.width/2 - rect.left);
       const cy = (wrapRect.top + wrapRect.height/2 - rect.top);
-
       spawnParticles(cx, cy, Math.min(40, getClickValue()*2));
-
-      drop.classList.add('wobble');
-      setTimeout(()=> drop.classList.remove('wobble'), 520);
+      drop.classList.add('wobble'); setTimeout(()=> drop.classList.remove('wobble'), 520);
       makeRipple();
-
       const localX = clientX - wrapRect.left;
       const localY = clientY - wrapRect.top;
       const xPct = Math.max(6, Math.min(94, (localX / wrapRect.width) * 100));
       const yPct = Math.max(8, Math.min(94, (localY / wrapRect.height) * 100));
       makeSpark(xPct, yPct);
-
       playPop();
       score += getClickValue();
-
       updateAfterScoreChange();
     }
 
@@ -889,16 +488,10 @@
       const clientY = (ev.touches && ev.touches[0]) ? ev.touches[0].clientY : ev.clientY;
       handleCollect(clientX, clientY);
     }
-    drop.addEventListener('pointerdown', onPointerDownWrapped);
 
-    drop.addEventListener('keydown', (e) => {
-      if (gameOver) return;
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        const rect = drop.getBoundingClientRect();
-        handleCollect(rect.left + rect.width/2, rect.top + rect.height/2);
-      }
-    });
+    // attach click handlers (drop)
+    drop.addEventListener('pointerdown', onPointerDownWrapped);
+    drop.addEventListener('keydown', (e) => { if (gameOver) return; if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); const r = drop.getBoundingClientRect(); handleCollect(r.left + r.width/2, r.top + r.height/2); } });
 
     function updateAfterScoreChange() {
       scoreEl.textContent = score;
@@ -908,11 +501,10 @@
       refreshShopState();
     }
 
-    // ---------- Score UI update & countbar ----------
     function updateCountBar() {
       const pct = Math.min(100, Math.round((score / WATER_PER_SEA) * 100));
       countFill.style.width = pct + '%';
-      countBar.setAttribute('aria-valuenow', String(Math.min(score, WATER_PER_SEA)));
+      if (countBar) countBar.setAttribute('aria-valuenow', String(Math.min(score, WATER_PER_SEA)));
       countLabelLeft.textContent = `${score} water`;
       countLabelRight.textContent = `${Math.min(score, WATER_PER_SEA)} / ${WATER_PER_SEA}`;
     }
@@ -921,11 +513,13 @@
       seaCountEl.textContent = seas;
       oceanCountEl.textContent = oceans;
       linsCountEl.textContent = lins;
-      dpsPill.textContent = `${dropsPerSecond} /sec`;
-      clickPill.textContent = `${getClickValue()} per click`;
+      const dpsTextEl = document.getElementById('dpsPill');
+      if (dpsTextEl) dpsTextEl.textContent = `${dropsPerSecond} /sec`;
+      const clickTextEl = document.getElementById('clickPill');
+      if (clickTextEl) clickTextEl.textContent = `${getClickValue()} per click`;
     }
 
-    // ---------- Passive income (DPS) ticking ----------
+    // ---------- DPS tick ----------
     setInterval(() => {
       if (dropsPerSecond > 0 && !gameOver) {
         score += dropsPerSecond;
@@ -935,83 +529,41 @@
       }
     }, 1000);
 
-    // ---------- Converter logic (100 water -> 10 lins) ----------
+    // ---------- Converter ----------
     function updateConvertButton() {
       const canConvert = score >= CONVERT_WATER && !gameOver;
-      convertBtn.disabled = !canConvert;
-      shopWaterCount.textContent = score;
+      if (convertBtn) convertBtn.disabled = !canConvert;
+      if (shopWaterCount) shopWaterCount.textContent = score;
     }
-
-    convertBtn.addEventListener('click', () => {
-      if (score < CONVERT_WATER) {
-        shopStatus.textContent = `Not enough water — need ${CONVERT_WATER} drops.`;
-        updateConvertButton();
-        return;
-      }
+    if (convertBtn) convertBtn.addEventListener('click', () => {
+      if (score < CONVERT_WATER) { shopStatus.textContent = `Not enough water — need ${CONVERT_WATER} drops.`; updateConvertButton(); return; }
       score -= CONVERT_WATER;
       lins += CONVERT_LINS;
-
       shopStatus.textContent = `Converted ${CONVERT_WATER} water → +${CONVERT_LINS} Lins`;
-      playPop();
-      pulseBadge(linsBadge);
-
-      scoreEl.textContent = score;
-      updateCountBar();
-      updateBadgesUI();
-      updateConvertButton();
-
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/2, 34);
-
-      // save after conversion
+      playPop(); pulseBadge(linsBadge);
+      updateAfterScoreChange(); updateConvertButton();
+      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 34);
       saveState();
-
-      setTimeout(()=> {
-        shopStatus.textContent = 'The shop is open.';
-      }, 1400);
+      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1400);
     });
 
-    // ---------- Market / Shop logic ----------
+    // ---------- Shop open/close ----------
     function openShop() {
-      shopOverlay.classList.add('show');
-      shopOverlay.setAttribute('aria-hidden', 'false');
-      shopClose.focus();
-      // disable drop while shop open
-      drop.setAttribute('aria-disabled', 'true');
-      drop.style.cursor = 'default';
-      // refresh shop display
-      shopWaterCount.textContent = score;
-      updateConvertButton();
-      updateBuyButtonsState();
-      shopStatus.textContent = 'The shop is open.';
+      shopOverlay.classList.add('show'); shopOverlay.setAttribute('aria-hidden','false'); shopClose.focus();
+      drop.setAttribute('aria-disabled','true'); drop.style.cursor = 'default';
+      shopWaterCount.textContent = score; updateConvertButton(); updateBuyButtonsState(); shopStatus.textContent = 'The shop is open.';
     }
-
     function closeShop() {
-      shopOverlay.classList.remove('show');
-      shopOverlay.setAttribute('aria-hidden', 'true');
-      if (!gameOver) {
-        drop.setAttribute('aria-disabled', 'false');
-        drop.style.cursor = '';
-      }
+      shopOverlay.classList.remove('show'); shopOverlay.setAttribute('aria-hidden','true');
+      if (!gameOver) { drop.setAttribute('aria-disabled','false'); drop.style.cursor = ''; }
       marketBtn.focus();
     }
-
     marketBtn.addEventListener('click', openShop);
     shopClose.addEventListener('click', closeShop);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && shopOverlay.classList.contains('show')) closeShop(); });
+    shopOverlay.addEventListener('pointerdown', (e) => { if (e.target === shopOverlay) closeShop(); });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (shopOverlay.classList.contains('show')) {
-          closeShop();
-        }
-      }
-    });
-
-    shopOverlay.addEventListener('pointerdown', (e) => {
-      if (e.target === shopOverlay) closeShop();
-    });
-
-    // ---------- Shop purchase logic (DPS + per-click) ----------
+    // ---------- Shop purchases ----------
     function notEnoughMsg() { return "you dont have enough lins! come back later!"; }
 
     function updateBuyButtonsState() {
@@ -1026,18 +578,9 @@
       if (lins < DPS5_COST) { shopStatus.textContent = notEnoughMsg(); return; }
       lins -= DPS5_COST; dropsPerSecond += DPS5_AMOUNT;
       buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true;
-      shopStatus.textContent = `Purchased +${DPS5_AMOUNT} drops/sec!`;
-      playPop();
-      pulseBadge(linsBadge);
-      updateBadgesUI();
-      updateConvertButton();
-
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/2, 48);
-
-      // save after purchase
+      shopStatus.textContent = `Purchased +${DPS5_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
+      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 48);
       saveState();
-
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
 
@@ -1046,18 +589,9 @@
       if (lins < DPS10_COST) { shopStatus.textContent = notEnoughMsg(); return; }
       lins -= DPS10_COST; dropsPerSecond += DPS10_AMOUNT;
       buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true;
-      shopStatus.textContent = `Purchased +${DPS10_AMOUNT} drops/sec!`;
-      playPop();
-      pulseBadge(linsBadge);
-      updateBadgesUI();
-      updateConvertButton();
-
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/2, 68);
-
-      // save after purchase
+      shopStatus.textContent = `Purchased +${DPS10_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
+      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 68);
       saveState();
-
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
 
@@ -1066,18 +600,9 @@
       if (lins < CLICK5_COST) { shopStatus.textContent = notEnoughMsg(); return; }
       lins -= CLICK5_COST; perClickBonus += CLICK5_AMOUNT;
       buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true;
-      shopStatus.textContent = `Purchased +${CLICK5_AMOUNT} drops per click!`;
-      playPop();
-      pulseBadge(linsBadge);
-      updateBadgesUI();
-      updateConvertButton();
-
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/2, 48);
-
-      // save after purchase
+      shopStatus.textContent = `Purchased +${CLICK5_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
+      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 48);
       saveState();
-
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
 
@@ -1086,18 +611,9 @@
       if (lins < CLICK10_COST) { shopStatus.textContent = notEnoughMsg(); return; }
       lins -= CLICK10_COST; perClickBonus += CLICK10_AMOUNT;
       buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true;
-      shopStatus.textContent = `Purchased +${CLICK10_AMOUNT} drops per click!`;
-      playPop();
-      pulseBadge(linsBadge);
-      updateBadgesUI();
-      updateConvertButton();
-
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/2, 68);
-
-      // save after purchase
+      shopStatus.textContent = `Purchased +${CLICK10_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
+      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 68);
       saveState();
-
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
 
@@ -1109,32 +625,12 @@
       }
     }
 
-    // ---------- Reset / sound controls ----------
-    soundToggle.addEventListener('click', () => {
-      soundOn = !soundOn;
-      soundToggle.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
-      if (soundOn) ensureAudio();
-    });
-
+    // ---------- Reset / start ----------
     function resetGame() {
-      score = 0;
-      seas = 0;
-      oceans = 0;
-      lins = 0;
-      dropsPerSecond = 0;
-      perClickBonus = 0;
-      gameOver = false;
-
+      score = 0; seas = 0; oceans = 0; lins = 0; dropsPerSecond = 0; perClickBonus = 0; gameOver = false;
       scoreEl.textContent = '0';
-      updateCountBar();
-      updateBadgesUI();
-
-      drop.setAttribute('aria-disabled', 'false');
-      drop.style.cursor = '';
-      drop.addEventListener('pointerdown', onPointerDownWrapped);
-      drop.tabIndex = 0;
-
-      // reset shop purchases
+      updateCountBar(); updateBadgesUI();
+      drop.setAttribute('aria-disabled', 'false'); drop.style.cursor = ''; drop.addEventListener('pointerdown', onPointerDownWrapped); drop.tabIndex = 0;
       [buyDPS5, buyDPS10, buyClick5, buyClick10].forEach(b => {
         b.dataset.purchased = 'false';
         if (b === buyDPS5) b.textContent = 'Buy (50 Lins)';
@@ -1144,23 +640,9 @@
         b.disabled = false;
       });
       updateBuyButtonsState();
-
-      // clear saved state
-      try { localStorage.removeItem('waterclicker_v1'); } catch (err) { /* ignore */ }
+      try { localStorage.removeItem(SAVE_KEY); } catch (err) {}
     }
 
-    // ---------- Persistent load, autosave start ----------
-    function initPersistence() {
-      loadState();
-      startAutosave();
-    }
-
-    // ---------- Persistent functions (defined earlier) ----------
-    // saveState and loadState were defined above (moved here for clarity)
-    // (Implementation is earlier in script; ensure they're available)
-    // They are already defined above in this script block.
-
-    // ---------- Create ambient background bubbles ----------
     function makeBubbles() {
       const count = 18;
       for (let i=0;i<count;i++) {
@@ -1180,84 +662,23 @@
       }
     }
 
-    // ---------- Start everything ----------
     function start() {
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
       makeBubbles();
       loop();
-      // load saved state and start autosave
       loadState();
       startAutosave();
-      updateCountBar();
-      updateBadgesUI();
-      // init shop item state (if not set by load)
-      [buyDPS5, buyDPS10, buyClick5, buyClick10].forEach(b => {
-        if (b.dataset.purchased !== 'true') b.dataset.purchased = 'false';
-      });
+      updateCountBar(); updateBadgesUI();
+      [buyDPS5, buyDPS10, buyClick5, buyClick10].forEach(b => { if (b && b.dataset.purchased !== 'true') b.dataset.purchased = 'false'; });
       updateBuyButtonsState();
     }
 
-    // ---------- Implementations of saveState / loadState / startAutosave (must exist) ----------
-    // (Placed here as functions so they are within scope)
-    const SAVE_KEY = 'waterclicker_v1';
-    let autosaveInterval = null;
-    function saveState() {
-      try {
-        const state = {
-          score,
-          seas,
-          oceans,
-          lins,
-          dropsPerSecond,
-          perClickBonus,
-          purchases: {
-            dps5: buyDPS5.dataset.purchased === 'true',
-            dps10: buyDPS10.dataset.purchased === 'true',
-            click5: buyClick5.dataset.purchased === 'true',
-            click10: buyClick10.dataset.purchased === 'true'
-          },
-          timestamp: Date.now()
-        };
-        localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-      } catch (err) {
-        console.warn('Save failed', err);
-      }
-    }
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(SAVE_KEY);
-        if (!raw) return;
-        const state = JSON.parse(raw);
-        if (!state) return;
-        score = Number(state.score) || 0;
-        seas = Number(state.seas) || 0;
-        oceans = Number(state.oceans) || 0;
-        lins = Number(state.lins) || 0;
-        dropsPerSecond = Number(state.dropsPerSecond) || 0;
-        perClickBonus = Number(state.perClickBonus) || 0;
-        if (state.purchases) {
-          if (state.purchases.dps5) { buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true; }
-          if (state.purchases.dps10) { buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true; }
-          if (state.purchases.click5) { buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true; }
-          if (state.purchases.click10) { buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true; }
-        }
-        updateAfterScoreChange();
-        updateBuyButtonsState();
-      } catch (err) {
-        console.warn('Load failed', err);
-      }
-    }
-    function startAutosave() {
-      if (autosaveInterval) clearInterval(autosaveInterval);
-      autosaveInterval = setInterval(saveState, 30000);
-    }
-
-    // ---------- Touch visual feedback & audio wake ----------
+    // ---------- Touch & audio wake ----------
     drop.addEventListener('touchstart', (e) => { e.preventDefault(); }, {passive:false});
     window.addEventListener('pointerdown', function one() { ensureAudio(); window.removeEventListener('pointerdown', one); }, {passive:true});
 
-    // start
+    // ---------- Start game ----------
     start();
   </script>
 </body>
