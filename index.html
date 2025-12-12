@@ -53,46 +53,39 @@
     .bar { position:relative; height:14px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.04); overflow:hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
     .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg, #7fe7ff, #38b7ff); box-shadow: 0 6px 18px rgba(54,173,255,0.18); transition: width 240ms cubic-bezier(.2,.9,.2,1); }
     .label { display:flex; justify-content:space-between; font-size:12px; color:rgba(235,255,255,0.9); font-weight:700; }
-
-    /* drops-per-second + per-click display */
     .dps { margin-top:6px; font-size:13px; color:#cfffff; opacity:0.95; display:flex; align-items:center; gap:10px; }
-    .dps .dps-pill, .dps .click-pill { background: linear-gradient(90deg,#1b5f79,#0f3d52); padding:6px 10px; border-radius:999px; font-weight:800; font-size:13px; color:#bff6ff; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
+    .dps-pill { background: linear-gradient(90deg,#1b5f79,#0f3d52); padding:6px 10px; border-radius:999px; font-weight:800; font-size:13px; color:#bff6ff; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
 
-    /* ---------- Sea & Ocean badges + Lins display ---------- */
+    /* ---------- Badges ---------- */
     .badge-wrap { display:flex; gap:10px; align-items:center; }
     .badge { display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.03); font-weight:700; color:#dff7ff; font-size:14px; }
     .badge svg { width:28px; height:28px; display:block; } .badge .num { font-weight:800; margin-left:6px; letter-spacing:-0.02em; }
-
     .badge.pulse { animation: pulseBadge 560ms cubic-bezier(.2,.9,.2,1); } @keyframes pulseBadge { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
 
-    /* ---------- Stage / center area ---------- */
+    /* ---------- Stage / drop ---------- */
     .stage { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:2; pointer-events:none; }
-
-    /* ---------- Drop wrapper ---------- */
     .drop-wrap { position:relative; width:260px; height:340px; display:flex; align-items:center; justify-content:center; pointer-events:auto; }
-
-    /* ---------- Water drop button ---------- */
     .drop { --size:160px; width:var(--size); height:calc(var(--size) * 1.2); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; border-radius:50% 50% 45% 45%; transform-origin:center bottom; transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms; will-change:transform; z-index:5; user-select:none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 18px 40px rgba(10,34,77,0.6)); pointer-events: auto; }
     .drop svg { width:100%; height:100%; display:block; pointer-events:none; } .drop:active { transform: scale(0.96); }
-    @keyframes bob { 0% { transform: translateY(-6px) rotate(-1deg); } 50% { transform: translateY(6px) rotate(1deg); } 100% { transform: translateY(-6px) rotate(-1deg); } }
-    .drop { animation: bob 3.6s ease-in-out infinite; } .drop.wobble { animation: wobble 480ms cubic-bezier(.2,.9,.2,1); } @keyframes wobble { 0% { transform: scale(1); } 30% { transform: scale(0.78) rotate(-6deg); } 60% { transform: scale(1.08) rotate(6deg); } 100% { transform: scale(1); } }
+    @keyframes bob { 0% { transform: translateY(-6px) rotate(-1deg); } 50% { transform: translateY(6px) rotate(1deg); } 100% { transform: translateY(-6px) rotate(-1deg); } } .drop { animation: bob 3.6s ease-in-out infinite; } .drop.wobble { animation: wobble 480ms cubic-bezier(.2,.9,.2,1); } @keyframes wobble { 0% { transform: scale(1); } 30% { transform: scale(0.78) rotate(-6deg); } 60% { transform: scale(1.08) rotate(6deg); } 100% { transform: scale(1); } }
 
-    .ripple { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); width:40%; height:40%; border-radius:50%; border: 2px solid rgba(166,229,255,0.35); pointer-events:none; z-index:4; animation: ripple 700ms cubic-bezier(.2,.9,.2,1); } @keyframes ripple { 0% { transform: translate(-50%,-50%) scale(0); opacity:0.9; } 70% { transform: translate(-50%,-50%) scale(1.6); opacity:0.18; } 100% { opacity:0; transform: translate(-50%,-50%) scale(1.8); } }
+    /* ripple/spark */
+    .ripple { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); width:40%; height:40%; border-radius:50%; border: 2px solid rgba(166,229,255,0.35); pointer-events:none; z-index:4; animation: ripple 700ms cubic-bezier(.2,.9,.2,1); backdrop-filter: blur(2px); } @keyframes ripple { 0% { transform: translate(-50%,-50%) scale(0); opacity:0.9; } 70% { transform: translate(-50%,-50%) scale(1.6); opacity:0.18; } 100% { opacity:0; transform: translate(-50%,-50%) scale(1.8); } }
     .spark { position:absolute; width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.9); box-shadow:0 0 12px 4px rgba(255,255,255,0.18); transform:translate(-50%,-50%) scale(0); animation: sparkPop 420ms ease-out forwards; z-index:6; pointer-events:none; } @keyframes sparkPop { 0% { transform: translate(-50%,-50%) scale(0); opacity:1; } 60% { transform: translate(-50%,-50%) scale(1.6); opacity:1; } 100% { transform: translate(-50%,-50%) scale(0.6); opacity:0; } }
 
-    /* footer / controls */
+    /* footer / shop */
     .footer { z-index:3; display:flex; gap:12px; align-items:center; justify-content:center; opacity:0.95; pointer-events:auto; }
     .btn { background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:10px; border:1px solid rgba(255,255,255,0.04); padding:8px 12px; color:#dff7ff; font-weight:600; cursor:pointer; display:inline-flex; gap:8px; align-items:center; } .btn:active { transform: translateY(1px); }
 
-    /* shop modal (market) */
     .shop { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:12; background: linear-gradient(180deg, rgba(2,7,12,0.56), rgba(2,7,12,0.66)); color:#eaffff; padding:20px; gap:12px; flex-direction:column; backdrop-filter: blur(4px) saturate(120%); opacity:0; pointer-events:none; transition: opacity 240ms ease, transform 240ms ease; transform: translateY(8px) scale(0.995); } .shop.show { opacity:1; pointer-events:auto; transform: translateY(0) scale(1); }
-    .shop .card { width:min(720px, 92vw); max-height:78vh; overflow:auto; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:18px; box-shadow: 0 18px 50px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:12px; }
-    .shop-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start; }
-    .shop-item { padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(10,30,50,0.08), rgba(10,30,50,0.04)); border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:8px; }
-    .shop-item .buy { margin-top:6px; padding:10px 12px; background: linear-gradient(90deg,#37c0ff,#66e9ff); color:#012233; border:0; border-radius:8px; font-weight:800; cursor:pointer; }
-    .shop-item .buy:disabled { opacity:0.5; cursor:not-allowed; }
+    .shop .card { width:min(920px, 96vw); max-height:78vh; overflow:auto; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:18px; box-shadow: 0 18px 50px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:12px; }
+    .shop-grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:start; }
 
-    @media (max-width:540px) { .drop-wrap { width:200px; height:260px; } .drop { --size: 120px; } .score .value { font-size:34px; } .badge svg { width:22px; height:22px; } .countbar { min-width:180px; max-width:260px; } .shop .card { width:92vw; padding:12px; } .shop-grid { grid-template-columns: 1fr; } }
+    .shop-item { padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(10,30,50,0.08), rgba(10,30,50,0.04)); border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:8px; }
+    .shop-item .title { font-weight:800; font-size:15px; } .shop-item .cost { color:#cfffff; font-weight:700; font-size:13px; opacity:0.95; } .shop-item .buy { margin-top:6px; padding:10px 12px; background: linear-gradient(90deg,#37c0ff,#66e9ff); color:#012233; border:0; border-radius:8px; font-weight:800; cursor:pointer; } .shop-item .buy:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+    @media (max-width:920px) { .shop-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width:540px) { .shop-grid { grid-template-columns: 1fr; } .drop { --size:120px; } .score .value { font-size:34px; } }
   </style>
 </head>
 <body>
@@ -125,7 +118,7 @@
                 <div class="dps-pill" id="dpsPill">0 /sec</div>
                 <div style="width:8px"></div>
                 <div>Per click:</div>
-                <div class="click-pill" id="clickPill">1</div>
+                <div class="dps-pill" id="clickPill">1</div>
               </div>
             </div>
 
@@ -162,13 +155,10 @@
       <div class="drop-wrap" id="dropWrap">
         <div class="drop" id="drop" role="button" aria-pressed="false" tabindex="0" aria-label="Collect water drop">
           <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#9fe9ff"/><stop offset="0.5" stop-color="#5ad0ff"/><stop offset="1" stop-color="#2aa6ff"/></linearGradient>
-              <radialGradient id="g2" cx="35%" cy="25%" r="65%"><stop offset="0" stop-color="rgba(255,255,255,0.95)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
-            </defs>
+            <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#9fe9ff"/><stop offset="0.5" stop-color="#5ad0ff"/><stop offset="1" stop-color="#2aa6ff"/></linearGradient><radialGradient id="g2" cx="35%" cy="25%" r="65%"><stop offset="0" stop-color="rgba(255,255,255,0.95)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>
             <path d="M100 6 C80 34, 26 96, 26 140 C26 180, 62 216, 100 216 C138 216, 174 180, 174 140 C174 96, 120 34, 100 6 Z" fill="url(#g1)" stroke="rgba(255,255,255,0.08)" stroke-width="1.6"/>
             <ellipse cx="76" cy="68" rx="34" ry="52" fill="url(#g2)" opacity="0.88"/>
-        </svg>
+          </svg>
         </div>
 
         <canvas id="canvas" style="position:absolute;inset:0;z-index:4;pointer-events:none;"></canvas>
@@ -229,6 +219,23 @@
               <div style="font-size:13px;color:rgba(210,250,255,0.9)">Each click gives +10 additional drops.</div>
               <button class="buy" id="buyClick10">Buy (100 Lins)</button>
             </div>
+
+            <!-- New: +50 DPS for 5 seas -->
+            <div class="shop-item" id="itemSeaDPS50">
+              <div class="title">+50 Water Drops Per Second</div>
+              <div class="cost">Costs 5 Seas</div>
+              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Costs Seas (not Lins). Spend 5 seas to add +50 DPS.</div>
+              <button class="buy" id="buySeaDPS50">Buy (5 Seas)</button>
+            </div>
+
+            <!-- New: +50 per click for 5 seas -->
+            <div class="shop-item" id="itemSeaClick50">
+              <div class="title">+50 Water Drops per click</div>
+              <div class="cost">Costs 5 Seas</div>
+              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Costs Seas (not Lins). Spend 5 seas to add +50 drops per click.</div>
+              <button class="buy" id="buySeaClick50">Buy (5 Seas)</button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -237,7 +244,7 @@
   </div>
 
   <script>
-    // ---------- DOM refs ----------
+    // DOM refs
     const drop = document.getElementById('drop');
     const scoreEl = document.getElementById('score');
     const canvas = document.getElementById('canvas');
@@ -248,8 +255,8 @@
     const countFill = document.getElementById('countFill');
     const countLabelLeft = document.getElementById('countLabelLeft');
     const countLabelRight = document.getElementById('countLabelRight');
-    const dpsPill = document.getElementById('dpsPill') || document.createElement('div');
-    const clickPill = document.getElementById('clickPill') || document.createElement('div');
+    const dpsPill = document.getElementById('dpsPill');
+    const clickPill = document.getElementById('clickPill');
 
     const seaCountEl = document.getElementById('seaCount');
     const oceanCountEl = document.getElementById('oceanCount');
@@ -265,12 +272,15 @@
     const shopWaterCount = document.getElementById('shopWaterCount');
     const convertBtn = document.getElementById('convertBtn');
 
+    // buy buttons
     const buyDPS5 = document.getElementById('buyDPS5');
     const buyDPS10 = document.getElementById('buyDPS10');
     const buyClick5 = document.getElementById('buyClick5');
     const buyClick10 = document.getElementById('buyClick10');
+    const buySeaDPS50 = document.getElementById('buySeaDPS50');   // new
+    const buySeaClick50 = document.getElementById('buySeaClick50'); // new
 
-    // ---------- Game state ----------
+    // Game state & constants
     let score = 0;
     let seas = 0;
     let oceans = 0;
@@ -292,10 +302,14 @@
     const CLICK10_COST = 100, CLICK10_AMOUNT = 10;
     const BASE_CLICK = 1;
 
+    // new sea-costed upgrades
+    const SEA50_DPS_COST = 5, SEA50_DPS_AMOUNT = 50;
+    const SEA50_CLICK_COST = 5, SEA50_CLICK_AMOUNT = 50;
+
     let soundOn = true;
     let gameOver = false;
 
-    // ---------- Canvas / particles ----------
+    // Canvas & particles
     let ctx, DPR = Math.max(1, window.devicePixelRatio || 1);
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
@@ -353,18 +367,18 @@
     let raf;
     function loop() { renderParticles(); raf = requestAnimationFrame(loop); }
 
-    // ---------- Audio ----------
+    // Audio
     let audioCtx = null;
     function ensureAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
     function playPop() { if (!soundOn) return; ensureAudio(); const t = audioCtx.currentTime; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(720 + Math.random()*200,t); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.08,t+0.008); g.gain.exponentialRampToValueAtTime(0.001,t+0.45); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+0.5); }
 
-    // ---------- Helpers ----------
+    // Helpers
     function getClickValue() { return BASE_CLICK + perClickBonus; }
     function makeRipple() { const r = document.createElement('div'); r.className = 'ripple'; drop.appendChild(r); setTimeout(()=> r.remove(), 750); }
     function makeSpark(xPct, yPct) { const s = document.createElement('div'); s.className = 'spark'; s.style.left = xPct + '%'; s.style.top = yPct + '%'; drop.appendChild(s); setTimeout(()=> s.remove(), 480); }
     function pulseBadge(el) { if (!el) return; el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); setTimeout(()=> el.classList.remove('pulse'), 700); }
 
-    // ---------- Persistence (save/load/autosave) ----------
+    // Persistence
     const SAVE_KEY = 'waterclicker_v1';
     let autosaveInterval = null;
     function saveState() {
@@ -376,7 +390,9 @@
             dps5: buyDPS5.dataset.purchased === 'true',
             dps10: buyDPS10.dataset.purchased === 'true',
             click5: buyClick5.dataset.purchased === 'true',
-            click10: buyClick10.dataset.purchased === 'true'
+            click10: buyClick10.dataset.purchased === 'true',
+            seaDps50: buySeaDPS50.dataset.purchased === 'true',
+            seaClick50: buySeaClick50.dataset.purchased === 'true'
           },
           timestamp: Date.now()
         };
@@ -402,6 +418,8 @@
           if (s.purchases.dps10) { buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true; }
           if (s.purchases.click5) { buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true; }
           if (s.purchases.click10) { buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true; }
+          if (s.purchases.seaDps50) { buySeaDPS50.dataset.purchased = 'true'; buySeaDPS50.textContent = 'Purchased'; buySeaDPS50.disabled = true; }
+          if (s.purchases.seaClick50) { buySeaClick50.dataset.purchased = 'true'; buySeaClick50.textContent = 'Purchased'; buySeaClick50.disabled = true; }
         }
       } catch (err) {
         console.warn('Load failed', err);
@@ -410,7 +428,7 @@
     function startAutosave() { if (autosaveInterval) clearInterval(autosaveInterval); autosaveInterval = setInterval(saveState, 30000); }
     window.addEventListener('beforeunload', saveState);
 
-    // ---------- Game conversion logic ----------
+    // Conversions
     function checkConversions() {
       if (gameOver) return;
       let converted = false;
@@ -446,23 +464,15 @@
       if (soundOn) {
         ensureAudio();
         const t = audioCtx.currentTime;
-        const o1 = audioCtx.createOscillator();
-        const o2 = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o1.type = 'sine'; o2.type = 'sine';
-        o1.frequency.setValueAtTime(240, t);
-        o2.frequency.setValueAtTime(360, t);
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(0.14, t+0.03);
-        g.gain.exponentialRampToValueAtTime(0.0001, t+1.8);
-        o1.connect(g); o2.connect(g); g.connect(audioCtx.destination);
-        o1.start(t); o2.start(t);
-        o1.stop(t+1.9); o2.stop(t+1.9);
+        const o1 = audioCtx.createOscillator(); const o2 = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        o1.type='sine'; o2.type='sine'; o1.frequency.setValueAtTime(240,t); o2.frequency.setValueAtTime(360,t);
+        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.14,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+1.8);
+        o1.connect(g); o2.connect(g); g.connect(audioCtx.destination); o1.start(t); o2.start(t); o1.stop(t+1.9); o2.stop(t+1.9);
       }
       saveState();
     }
 
-    // ---------- Click handling ----------
+    // Click handling
     function handleCollect(clientX, clientY) {
       if (gameOver) return;
       const rect = canvas.getBoundingClientRect();
@@ -488,38 +498,14 @@
       const clientY = (ev.touches && ev.touches[0]) ? ev.touches[0].clientY : ev.clientY;
       handleCollect(clientX, clientY);
     }
-
-    // attach click handlers (drop)
     drop.addEventListener('pointerdown', onPointerDownWrapped);
     drop.addEventListener('keydown', (e) => { if (gameOver) return; if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); const r = drop.getBoundingClientRect(); handleCollect(r.left + r.width/2, r.top + r.height/2); } });
 
-    function updateAfterScoreChange() {
-      scoreEl.textContent = score;
-      updateCountBar();
-      updateBadgesUI();
-      checkConversions();
-      refreshShopState();
-    }
+    function updateAfterScoreChange() { scoreEl.textContent = score; updateCountBar(); updateBadgesUI(); checkConversions(); refreshShopState(); }
+    function updateCountBar() { const pct = Math.min(100, Math.round((score / WATER_PER_SEA) * 100)); countFill.style.width = pct + '%'; countBar.setAttribute('aria-valuenow', String(Math.min(score, WATER_PER_SEA))); countLabelLeft.textContent = `${score} water`; countLabelRight.textContent = `${Math.min(score, WATER_PER_SEA)} / ${WATER_PER_SEA}`; }
+    function updateBadgesUI() { seaCountEl.textContent = seas; oceanCountEl.textContent = oceans; linsCountEl.textContent = lins; dpsPill.textContent = `${dropsPerSecond} /sec`; clickPill.textContent = `${getClickValue()} per click`; }
 
-    function updateCountBar() {
-      const pct = Math.min(100, Math.round((score / WATER_PER_SEA) * 100));
-      countFill.style.width = pct + '%';
-      if (countBar) countBar.setAttribute('aria-valuenow', String(Math.min(score, WATER_PER_SEA)));
-      countLabelLeft.textContent = `${score} water`;
-      countLabelRight.textContent = `${Math.min(score, WATER_PER_SEA)} / ${WATER_PER_SEA}`;
-    }
-
-    function updateBadgesUI() {
-      seaCountEl.textContent = seas;
-      oceanCountEl.textContent = oceans;
-      linsCountEl.textContent = lins;
-      const dpsTextEl = document.getElementById('dpsPill');
-      if (dpsTextEl) dpsTextEl.textContent = `${dropsPerSecond} /sec`;
-      const clickTextEl = document.getElementById('clickPill');
-      if (clickTextEl) clickTextEl.textContent = `${getClickValue()} per click`;
-    }
-
-    // ---------- DPS tick ----------
+    // DPS tick
     setInterval(() => {
       if (dropsPerSecond > 0 && !gameOver) {
         score += dropsPerSecond;
@@ -529,16 +515,11 @@
       }
     }, 1000);
 
-    // ---------- Converter ----------
-    function updateConvertButton() {
-      const canConvert = score >= CONVERT_WATER && !gameOver;
-      if (convertBtn) convertBtn.disabled = !canConvert;
-      if (shopWaterCount) shopWaterCount.textContent = score;
-    }
-    if (convertBtn) convertBtn.addEventListener('click', () => {
+    // Converter
+    function updateConvertButton() { const canConvert = score >= CONVERT_WATER && !gameOver; convertBtn.disabled = !canConvert; shopWaterCount.textContent = score; }
+    convertBtn.addEventListener('click', () => {
       if (score < CONVERT_WATER) { shopStatus.textContent = `Not enough water — need ${CONVERT_WATER} drops.`; updateConvertButton(); return; }
-      score -= CONVERT_WATER;
-      lins += CONVERT_LINS;
+      score -= CONVERT_WATER; lins += CONVERT_LINS;
       shopStatus.textContent = `Converted ${CONVERT_WATER} water → +${CONVERT_LINS} Lins`;
       playPop(); pulseBadge(linsBadge);
       updateAfterScoreChange(); updateConvertButton();
@@ -547,39 +528,36 @@
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1400);
     });
 
-    // ---------- Shop open/close ----------
-    function openShop() {
-      shopOverlay.classList.add('show'); shopOverlay.setAttribute('aria-hidden','false'); shopClose.focus();
-      drop.setAttribute('aria-disabled','true'); drop.style.cursor = 'default';
-      shopWaterCount.textContent = score; updateConvertButton(); updateBuyButtonsState(); shopStatus.textContent = 'The shop is open.';
-    }
-    function closeShop() {
-      shopOverlay.classList.remove('show'); shopOverlay.setAttribute('aria-hidden','true');
-      if (!gameOver) { drop.setAttribute('aria-disabled','false'); drop.style.cursor = ''; }
-      marketBtn.focus();
-    }
-    marketBtn.addEventListener('click', openShop);
-    shopClose.addEventListener('click', closeShop);
+    // Shop open/close
+    function openShop() { shopOverlay.classList.add('show'); shopOverlay.setAttribute('aria-hidden','false'); shopClose.focus(); drop.setAttribute('aria-disabled','true'); drop.style.cursor='default'; shopWaterCount.textContent = score; updateConvertButton(); updateBuyButtonsState(); shopStatus.textContent = 'The shop is open.'; }
+    function closeShop() { shopOverlay.classList.remove('show'); shopOverlay.setAttribute('aria-hidden','true'); if (!gameOver) { drop.setAttribute('aria-disabled','false'); drop.style.cursor=''; } marketBtn.focus(); }
+    marketBtn.addEventListener('click', openShop); shopClose.addEventListener('click', closeShop);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && shopOverlay.classList.contains('show')) closeShop(); });
     shopOverlay.addEventListener('pointerdown', (e) => { if (e.target === shopOverlay) closeShop(); });
 
-    // ---------- Shop purchases ----------
+    // Shop purchases & sea-priced items
     function notEnoughMsg() { return "you dont have enough lins! come back later!"; }
+    function notEnoughSeasMsg() { return "you dont have enough seas!"; }
 
     function updateBuyButtonsState() {
       buyDPS5.disabled = (lins < DPS5_COST) || buyDPS5.dataset.purchased === 'true' || gameOver;
       buyDPS10.disabled = (lins < DPS10_COST) || buyDPS10.dataset.purchased === 'true' || gameOver;
       buyClick5.disabled = (lins < CLICK5_COST) || buyClick5.dataset.purchased === 'true' || gameOver;
       buyClick10.disabled = (lins < CLICK10_COST) || buyClick10.dataset.purchased === 'true' || gameOver;
+
+      // sea-costed items use seas
+      buySeaDPS50.disabled = (seas < SEA50_DPS_COST) || buySeaDPS50.dataset.purchased === 'true' || gameOver;
+      buySeaClick50.disabled = (seas < SEA50_CLICK_COST) || buySeaClick50.dataset.purchased === 'true' || gameOver;
     }
 
+    // lins-priced purchases
     buyDPS5.addEventListener('click', () => {
       if (buyDPS5.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
       if (lins < DPS5_COST) { shopStatus.textContent = notEnoughMsg(); return; }
       lins -= DPS5_COST; dropsPerSecond += DPS5_AMOUNT;
       buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true;
       shopStatus.textContent = `Purchased +${DPS5_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 48);
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 48);
       saveState();
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
@@ -590,7 +568,7 @@
       lins -= DPS10_COST; dropsPerSecond += DPS10_AMOUNT;
       buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true;
       shopStatus.textContent = `Purchased +${DPS10_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 68);
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 68);
       saveState();
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
@@ -601,7 +579,7 @@
       lins -= CLICK5_COST; perClickBonus += CLICK5_AMOUNT;
       buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true;
       shopStatus.textContent = `Purchased +${CLICK5_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 48);
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 48);
       saveState();
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
@@ -612,7 +590,38 @@
       lins -= CLICK10_COST; perClickBonus += CLICK10_AMOUNT;
       buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true;
       shopStatus.textContent = `Purchased +${CLICK10_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 68);
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 68);
+      saveState();
+      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
+    });
+
+    // sea-costed purchases (new)
+    buySeaDPS50.addEventListener('click', () => {
+      if (buySeaDPS50.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
+      if (seas < SEA50_DPS_COST) { shopStatus.textContent = notEnoughSeasMsg(); return; }
+      seas -= SEA50_DPS_COST;
+      dropsPerSecond += SEA50_DPS_AMOUNT;
+      buySeaDPS50.dataset.purchased = 'true';
+      buySeaDPS50.textContent = 'Purchased';
+      buySeaDPS50.disabled = true;
+      shopStatus.textContent = `Purchased +${SEA50_DPS_AMOUNT} drops/sec (spent ${SEA50_DPS_COST} seas)!`;
+      playPop(); pulseBadge(seaBadge); updateBadgesUI();
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 96);
+      saveState();
+      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
+    });
+
+    buySeaClick50.addEventListener('click', () => {
+      if (buySeaClick50.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
+      if (seas < SEA50_CLICK_COST) { shopStatus.textContent = notEnoughSeasMsg(); return; }
+      seas -= SEA50_CLICK_COST;
+      perClickBonus += SEA50_CLICK_AMOUNT;
+      buySeaClick50.dataset.purchased = 'true';
+      buySeaClick50.textContent = 'Purchased';
+      buySeaClick50.disabled = true;
+      shopStatus.textContent = `Purchased +${SEA50_CLICK_AMOUNT} drops per click (spent ${SEA50_CLICK_COST} seas)!`;
+      playPop(); pulseBadge(seaBadge); updateBadgesUI();
+      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 96);
       saveState();
       setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
     });
@@ -625,19 +634,23 @@
       }
     }
 
-    // ---------- Reset / start ----------
+    // Reset & start
     function resetGame() {
       score = 0; seas = 0; oceans = 0; lins = 0; dropsPerSecond = 0; perClickBonus = 0; gameOver = false;
       scoreEl.textContent = '0';
       updateCountBar(); updateBadgesUI();
       drop.setAttribute('aria-disabled', 'false'); drop.style.cursor = ''; drop.addEventListener('pointerdown', onPointerDownWrapped); drop.tabIndex = 0;
-      [buyDPS5, buyDPS10, buyClick5, buyClick10].forEach(b => {
+      [buyDPS5, buyDPS10, buyClick5, buyClick10, buySeaDPS50, buySeaClick50].forEach(b => {
         b.dataset.purchased = 'false';
-        if (b === buyDPS5) b.textContent = 'Buy (50 Lins)';
-        if (b === buyDPS10) b.textContent = 'Buy (100 Lins)';
-        if (b === buyClick5) b.textContent = 'Buy (50 Lins)';
-        if (b === buyClick10) b.textContent = 'Buy (100 Lins)';
-        b.disabled = false;
+        if (b) {
+          if (b === buyDPS5) b.textContent = 'Buy (50 Lins)';
+          if (b === buyDPS10) b.textContent = 'Buy (100 Lins)';
+          if (b === buyClick5) b.textContent = 'Buy (50 Lins)';
+          if (b === buyClick10) b.textContent = 'Buy (100 Lins)';
+          if (b === buySeaDPS50) b.textContent = 'Buy (5 Seas)';
+          if (b === buySeaClick50) b.textContent = 'Buy (5 Seas)';
+          b.disabled = false;
+        }
       });
       updateBuyButtonsState();
       try { localStorage.removeItem(SAVE_KEY); } catch (err) {}
@@ -670,15 +683,14 @@
       loadState();
       startAutosave();
       updateCountBar(); updateBadgesUI();
-      [buyDPS5, buyDPS10, buyClick5, buyClick10].forEach(b => { if (b && b.dataset.purchased !== 'true') b.dataset.purchased = 'false'; });
+      [buyDPS5, buyDPS10, buyClick5, buyClick10, buySeaDPS50, buySeaClick50].forEach(b => { if (b && b.dataset.purchased !== 'true') b.dataset.purchased = 'false'; });
       updateBuyButtonsState();
     }
 
-    // ---------- Touch & audio wake ----------
+    // Touch & audio wake
     drop.addEventListener('touchstart', (e) => { e.preventDefault(); }, {passive:false});
     window.addEventListener('pointerdown', function one() { ensureAudio(); window.removeEventListener('pointerdown', one); }, {passive:true});
 
-    // ---------- Start game ----------
     start();
   </script>
 </body>
