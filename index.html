@@ -1,697 +1,260 @@
-<!doctype html>
+le <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Water Drop Clicker — Splash!</title>
-  <style>
-    /* ---------- Reset & base ---------- */
-    * { box-sizing: border-box; }
-    html,body { height:100%; margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    body {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(24,64,126,0.12), transparent 8%),
-        radial-gradient(1000px 500px at 90% 90%, rgba(78,151,234,0.08), transparent 10%),
-        linear-gradient(180deg,#071029 0%, #09233b 45%, #052b49 100%);
-      color:#eaf6ff;
-      overflow:hidden;
-    }
-
-    /* ---------- Scene container ---------- */
-    .scene {
-      position:relative;
-      width:min(960px, 96vw);
-      min-height:640px;
-      height:80vh;
-      display:grid;
-      grid-template-rows: auto 1fr auto;
-      gap:18px;
-      align-items:center;
-      justify-items:center;
-      user-select:none;
-      -webkit-user-select:none;
-    }
-
-    /* ---------- Floating background bubbles ---------- */
-    .bubbles { position:absolute; inset:0; pointer-events:none; overflow:hidden; mix-blend-mode:screen; z-index:0; }
-    .bubble { position:absolute; border-radius:50%; filter: blur(10px); opacity:0.12; animation: floatUp linear infinite; transform: translate3d(0,0,0); }
-    @keyframes floatUp { from { transform: translateY(20vh) scale(1); opacity:0.12; } to { transform: translateY(-30vh) scale(1.2); opacity:0.02; } }
-
-    /* ---------- HUD (score / instructions) ---------- */
-    .hud { z-index:3; display:flex; gap:18px; align-items:center; width:100%; padding:14px 22px; justify-content:space-between; pointer-events:none; }
-    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:14px; padding:10px 16px; backdrop-filter: blur(6px) saturate(120%); box-shadow: 0 6px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); display:flex; gap:12px; align-items:center; pointer-events:auto; }
-    .score { font-size:28px; font-weight:700; letter-spacing: -0.02em; display:flex; gap:8px; align-items:center; }
-    .score .value { background: linear-gradient(90deg,#e6fbff, #a6e5ff); -webkit-background-clip:text; background-clip:text; color: transparent; font-weight:800; font-size:40px; transition: transform 220ms cubic-bezier(.2,.9,.2,1); transform-origin:center; }
-    .meta { font-size:13px; color:rgba(234,246,255,0.8); opacity:0.9; }
-    .instructions { opacity:0.9; font-size:14px; color:rgba(234,246,255,0.85); }
-
-    /* ---------- Count bar (replaces inventory icons) ---------- */
-    .countbar { display:flex; flex-direction:column; gap:8px; min-width:240px; max-width:420px; }
-    .bar { position:relative; height:14px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.04); overflow:hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
-    .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg, #7fe7ff, #38b7ff); box-shadow: 0 6px 18px rgba(54,173,255,0.18); transition: width 240ms cubic-bezier(.2,.9,.2,1); }
-    .label { display:flex; justify-content:space-between; font-size:12px; color:rgba(235,255,255,0.9); font-weight:700; }
-    .dps { margin-top:6px; font-size:13px; color:#cfffff; opacity:0.95; display:flex; align-items:center; gap:10px; }
-    .dps-pill { background: linear-gradient(90deg,#1b5f79,#0f3d52); padding:6px 10px; border-radius:999px; font-weight:800; font-size:13px; color:#bff6ff; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
-
-    /* ---------- Badges ---------- */
-    .badge-wrap { display:flex; gap:10px; align-items:center; }
-    .badge { display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.03); font-weight:700; color:#dff7ff; font-size:14px; }
-    .badge svg { width:28px; height:28px; display:block; } .badge .num { font-weight:800; margin-left:6px; letter-spacing:-0.02em; }
-    .badge.pulse { animation: pulseBadge 560ms cubic-bezier(.2,.9,.2,1); } @keyframes pulseBadge { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
-
-    /* ---------- Stage / drop ---------- */
-    .stage { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; z-index:2; pointer-events:none; }
-    .drop-wrap { position:relative; width:260px; height:340px; display:flex; align-items:center; justify-content:center; pointer-events:auto; }
-    .drop { --size:160px; width:var(--size); height:calc(var(--size) * 1.2); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; border-radius:50% 50% 45% 45%; transform-origin:center bottom; transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms; will-change:transform; z-index:5; user-select:none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 18px 40px rgba(10,34,77,0.6)); pointer-events: auto; }
-    .drop svg { width:100%; height:100%; display:block; pointer-events:none; } .drop:active { transform: scale(0.96); }
-    @keyframes bob { 0% { transform: translateY(-6px) rotate(-1deg); } 50% { transform: translateY(6px) rotate(1deg); } 100% { transform: translateY(-6px) rotate(-1deg); } } .drop { animation: bob 3.6s ease-in-out infinite; } .drop.wobble { animation: wobble 480ms cubic-bezier(.2,.9,.2,1); } @keyframes wobble { 0% { transform: scale(1); } 30% { transform: scale(0.78) rotate(-6deg); } 60% { transform: scale(1.08) rotate(6deg); } 100% { transform: scale(1); } }
-
-    /* ripple/spark */
-    .ripple { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); width:40%; height:40%; border-radius:50%; border: 2px solid rgba(166,229,255,0.35); pointer-events:none; z-index:4; animation: ripple 700ms cubic-bezier(.2,.9,.2,1); backdrop-filter: blur(2px); } @keyframes ripple { 0% { transform: translate(-50%,-50%) scale(0); opacity:0.9; } 70% { transform: translate(-50%,-50%) scale(1.6); opacity:0.18; } 100% { opacity:0; transform: translate(-50%,-50%) scale(1.8); } }
-    .spark { position:absolute; width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.9); box-shadow:0 0 12px 4px rgba(255,255,255,0.18); transform:translate(-50%,-50%) scale(0); animation: sparkPop 420ms ease-out forwards; z-index:6; pointer-events:none; } @keyframes sparkPop { 0% { transform: translate(-50%,-50%) scale(0); opacity:1; } 60% { transform: translate(-50%,-50%) scale(1.6); opacity:1; } 100% { transform: translate(-50%,-50%) scale(0.6); opacity:0; } }
-
-    /* footer / shop */
-    .footer { z-index:3; display:flex; gap:12px; align-items:center; justify-content:center; opacity:0.95; pointer-events:auto; }
-    .btn { background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:10px; border:1px solid rgba(255,255,255,0.04); padding:8px 12px; color:#dff7ff; font-weight:600; cursor:pointer; display:inline-flex; gap:8px; align-items:center; } .btn:active { transform: translateY(1px); }
-
-    .shop { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:12; background: linear-gradient(180deg, rgba(2,7,12,0.56), rgba(2,7,12,0.66)); color:#eaffff; padding:20px; gap:12px; flex-direction:column; backdrop-filter: blur(4px) saturate(120%); opacity:0; pointer-events:none; transition: opacity 240ms ease, transform 240ms ease; transform: translateY(8px) scale(0.995); } .shop.show { opacity:1; pointer-events:auto; transform: translateY(0) scale(1); }
-    .shop .card { width:min(920px, 96vw); max-height:78vh; overflow:auto; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:18px; box-shadow: 0 18px 50px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:12px; }
-    .shop-grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:start; }
-
-    .shop-item { padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(10,30,50,0.08), rgba(10,30,50,0.04)); border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:8px; }
-    .shop-item .title { font-weight:800; font-size:15px; } .shop-item .cost { color:#cfffff; font-weight:700; font-size:13px; opacity:0.95; } .shop-item .buy { margin-top:6px; padding:10px 12px; background: linear-gradient(90deg,#37c0ff,#66e9ff); color:#012233; border:0; border-radius:8px; font-weight:800; cursor:pointer; } .shop-item .buy:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-
-    @media (max-width:920px) { .shop-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width:540px) { .shop-grid { grid-template-columns: 1fr; } .drop { --size:120px; } .score .value { font-size:34px; } }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Life Clicker — V1.0</title>
+  <link rel="stylesheet" href="main-page.css" />
+  <meta name="description" content="Life Clicker — click to gain Water Drops and watch the ocean!" />
 </head>
 <body>
-  <div class="scene" id="scene">
-    <div class="bubbles" id="bubbles"></div>
+  <!-- Decorative sky layer (moon + stars) -->
+  <div class="sky" aria-hidden="true">
+    <div id="stars" class="stars" aria-hidden="true"></div>
 
-    <div class="hud" aria-hidden="false">
-      <div class="panel" title="Your water drops & inventory">
-        <div style="display:flex;flex-direction:column">
-          <div class="meta">Water collected</div>
-          <div style="display:flex;align-items:center;gap:14px">
-            <div class="score" aria-live="polite">
-              <div class="value" id="score">0</div>
-              <div style="font-size:14px;opacity:0.8;">drops</div>
-            </div>
-
-            <div style="display:flex;flex-direction:column">
-              <div class="countbar" aria-hidden="false" aria-label="Water count and progress">
-                <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="0" id="countBar">
-                  <div class="fill" id="countFill"></div>
-                </div>
-                <div class="label">
-                  <div class="left" id="countLabelLeft">0 water</div>
-                  <div class="right" id="countLabelRight">0 / 200</div>
-                </div>
-              </div>
-
-              <div class="dps" aria-live="polite">
-                <div>Income:</div>
-                <div class="dps-pill" id="dpsPill">0 /sec</div>
-                <div style="width:8px"></div>
-                <div>Per click:</div>
-                <div class="dps-pill" id="clickPill">1</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div style="display:flex;flex-direction:column;align-items:flex-end">
-          <div class="instructions">Click the drop to collect water — each click = your current per-click value</div>
-
-          <div class="badge-wrap" style="margin-top:8px;">
-            <div class="badge" id="seaBadge" title="Seas">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="seaG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#7fe7ff"/><stop offset="1" stop-color="#38b7ff"/></linearGradient></defs><path d="M2 15c2.5-1.5 4 1 6 0s3 1.5 5 0 3.5 1.5 5 0v5H2v-5z" fill="url(#seaG)"></path><circle cx="8" cy="6" r="1.6" fill="#fff" opacity="0.9"></circle></svg>
-              Sea <div class="num" id="seaCount">0</div>
-            </div>
-
-            <div class="badge" id="oceanBadge" title="Oceans">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="oceanG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#b4fff6"/><stop offset="1" stop-color="#45e0ff"/></linearGradient></defs><path d="M2 14c3-2 5 1 8 0 3-1.2 4.5 1.5 7 0v6H2v-6z" fill="url(#oceanG)"></path><circle cx="16" cy="5" r="1.8" fill="#fff" opacity="0.95"></circle></svg>
-              Ocean <div class="num" id="oceanCount">0</div>
-            </div>
-
-            <div class="badge" id="linsBadge" title="Lins">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="linsG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff8c8"/><stop offset="1" stop-color="#ffd46b"/></linearGradient></defs><circle cx="12" cy="12" r="9" fill="url(#linsG)"></circle><text x="12" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#28343b">L</text></svg>
-              Lins <div class="num" id="linsCount">0</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+    <div id="moon" class="moon" aria-hidden="true">
+      <div class="crater c1"></div>
+      <div class="crater c2"></div>
+      <div class="crater c3"></div>
     </div>
-
-    <main class="stage" role="main">
-      <div class="drop-wrap" id="dropWrap">
-        <div class="drop" id="drop" role="button" aria-pressed="false" tabindex="0" aria-label="Collect water drop">
-          <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#9fe9ff"/><stop offset="0.5" stop-color="#5ad0ff"/><stop offset="1" stop-color="#2aa6ff"/></linearGradient><radialGradient id="g2" cx="35%" cy="25%" r="65%"><stop offset="0" stop-color="rgba(255,255,255,0.95)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>
-            <path d="M100 6 C80 34, 26 96, 26 140 C26 180, 62 216, 100 216 C138 216, 174 180, 174 140 C174 96, 120 34, 100 6 Z" fill="url(#g1)" stroke="rgba(255,255,255,0.08)" stroke-width="1.6"/>
-            <ellipse cx="76" cy="68" rx="34" ry="52" fill="url(#g2)" opacity="0.88"/>
-          </svg>
-        </div>
-
-        <canvas id="canvas" style="position:absolute;inset:0;z-index:4;pointer-events:none;"></canvas>
-      </div>
-    </main>
-
-    <div class="footer">
-      <button class="btn" id="marketBtn" aria-haspopup="dialog" aria-controls="shopOverlay">Market</button>
-      <button class="btn" id="soundToggle">Sound: On</button>
-    </div>
-
-    <div id="shopOverlay" class="shop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="shopTitle">
-      <div class="card" role="document">
-        <div class="header">
-          <div class="title" id="shopTitle">Market</div>
-          <div><button class="close" id="shopClose" aria-label="Close market">Close</button></div>
-        </div>
-
-        <div class="content" id="shopContent">
-          <div class="converter" id="converterRow" style="display:flex;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(10,30,50,0.06),rgba(10,30,50,0.03));border:1px solid rgba(255,255,255,0.03)">
-            <div style="display:flex;flex-direction:column">
-              <div style="font-weight:800;font-size:15px">Converter — Water → Lins</div>
-              <div style="font-size:13px;color:#cfffff">100 Water → 10 Lins</div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-              <div style="font-size:12px;color:rgba(220,255,255,0.9)">You have: <strong id="shopWaterCount">0</strong> water</div>
-              <button class="btn-convert" id="convertBtn" style="background:linear-gradient(90deg,#37c0ff,#66e9ff);color:#012233;border:0;padding:8px 12px;border-radius:8px;font-weight:800;">Convert</button>
-            </div>
-          </div>
-
-          <div class="status" id="shopStatus">The shop is open.</div>
-
-          <div class="shop-grid" style="margin-top:8px;">
-            <div class="shop-item" id="itemDPS5">
-              <div class="title">+5 Water Drops Per Second</div>
-              <div class="cost">Costs 50 Lins</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Adds passive income of +5 drops every second.</div>
-              <button class="buy" id="buyDPS5">Buy (50 Lins)</button>
-            </div>
-
-            <div class="shop-item" id="itemDPS10">
-              <div class="title">+10 Water Drops Per Second</div>
-              <div class="cost">Costs 100 Lins</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Adds passive income of +10 drops every second.</div>
-              <button class="buy" id="buyDPS10">Buy (100 Lins)</button>
-            </div>
-
-            <div class="shop-item" id="itemClick5">
-              <div class="title">+5 Water Drops per click</div>
-              <div class="cost">Costs 50 Lins</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Each click gives +5 additional drops.</div>
-              <button class="buy" id="buyClick5">Buy (50 Lins)</button>
-            </div>
-
-            <div class="shop-item" id="itemClick10">
-              <div class="title">+10 Water Drops per click</div>
-              <div class="cost">Costs 100 Lins</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Each click gives +10 additional drops.</div>
-              <button class="buy" id="buyClick10">Buy (100 Lins)</button>
-            </div>
-
-            <!-- New: +50 DPS for 5 seas -->
-            <div class="shop-item" id="itemSeaDPS50">
-              <div class="title">+50 Water Drops Per Second</div>
-              <div class="cost">Costs 5 Seas</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Costs Seas (not Lins). Spend 5 seas to add +50 DPS.</div>
-              <button class="buy" id="buySeaDPS50">Buy (5 Seas)</button>
-            </div>
-
-            <!-- New: +50 per click for 5 seas -->
-            <div class="shop-item" id="itemSeaClick50">
-              <div class="title">+50 Water Drops per click</div>
-              <div class="cost">Costs 5 Seas</div>
-              <div style="font-size:13px;color:rgba(210,250,255,0.9)">Costs Seas (not Lins). Spend 5 seas to add +50 drops per click.</div>
-              <button class="buy" id="buySeaClick50">Buy (5 Seas)</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
-  <script>
-    // DOM refs
-    const drop = document.getElementById('drop');
-    const scoreEl = document.getElementById('score');
-    const canvas = document.getElementById('canvas');
-    const soundToggle = document.getElementById('soundToggle');
-    const bubblesContainer = document.getElementById('bubbles');
+  <header class="site-header">
+    <div class="logo">
+      <div class="logo-icon" aria-hidden="true">💓</div>
+      <div class="logo-title">Life Clicker</div>
+    </div>
 
-    const countBar = document.getElementById('countBar');
-    const countFill = document.getElementById('countFill');
-    const countLabelLeft = document.getElementById('countLabelLeft');
-    const countLabelRight = document.getElementById('countLabelRight');
-    const dpsPill = document.getElementById('dpsPill');
-    const clickPill = document.getElementById('clickPill');
+    <!-- More visible version badge -->
+    <div class="version" title="Build version">V1.0</div>
+  </header>
 
-    const seaCountEl = document.getElementById('seaCount');
-    const oceanCountEl = document.getElementById('oceanCount');
-    const linsCountEl = document.getElementById('linsCount');
-    const seaBadge = document.getElementById('seaBadge');
-    const oceanBadge = document.getElementById('oceanBadge');
-    const linsBadge = document.getElementById('linsBadge');
+  <!-- NEW: Top counters for Lakes / Seas / Oceans -->
+  <div class="top-stats" role="region" aria-label="Global counters">
+    <div class="stat">
+      <div class="stat-icon" aria-hidden="true">🏞️</div>
+      <div class="stat-info">
+        <div class="stat-label">Lakes</div>
+        <div id="lakes-count" class="stat-value">0</div>
+      </div>
+    </div>
 
-    const marketBtn = document.getElementById('marketBtn');
-    const shopOverlay = document.getElementById('shopOverlay');
-    const shopClose = document.getElementById('shopClose');
-    const shopStatus = document.getElementById('shopStatus');
-    const shopWaterCount = document.getElementById('shopWaterCount');
-    const convertBtn = document.getElementById('convertBtn');
+    <div class="stat">
+      <div class="stat-icon" aria-hidden="true">🌊</div>
+      <div class="stat-info">
+        <div class="stat-label">Seas</div>
+        <div id="seas-count" class="stat-value">0</div>
+      </div>
+    </div>
 
-    // buy buttons
-    const buyDPS5 = document.getElementById('buyDPS5');
-    const buyDPS10 = document.getElementById('buyDPS10');
-    const buyClick5 = document.getElementById('buyClick5');
-    const buyClick10 = document.getElementById('buyClick10');
-    const buySeaDPS50 = document.getElementById('buySeaDPS50');   // new
-    const buySeaClick50 = document.getElementById('buySeaClick50'); // new
+    <div class="stat">
+      <div class="stat-icon" aria-hidden="true">🌐</div>
+      <div class="stat-info">
+        <div class="stat-label">Oceans</div>
+        <div id="oceans-count" class="stat-value">0</div>
+      </div>
+    </div>
+  </div>
 
-    // Game state & constants
-    let score = 0;
-    let seas = 0;
-    let oceans = 0;
-    let lins = 0;
+  <main class="container">
+    <section class="game-card">
+      <!-- Settings button (top-left of the game card) -->
+      <button id="settings-btn" class="settings-btn" type="button" aria-expanded="false" aria-controls="settings-modal" aria-label="Open settings">
+        <!-- gear icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" fill="currentColor"/>
+          <path d="M19.4 12.9c.04-.3.06-.61.06-.9s-.02-.6-.06-.9l2.1-1.6a.5.5 0 0 0 .12-.64l-2-3.4a.5.5 0 0 0-.6-.22l-2.5 1a8.1 8.1 0 0 0-1.6-.9l-.4-2.6A.5.5 0 0 0 12.6 2h-4a.5.5 0 0 0-.5.42l-.4 2.6c-.56.24-1.08.56-1.6.9l-2.5-1a.5.5 0 0 0-.6.22l-2 3.4a.5.5 0 0 0 .12.64l2.1 1.6c-.04.3-.06.61-.06.9s.02.6.06.9L2.2 14.5a.5.5 0 0 0-.12.64l2 3.4c.14.24.44.34.7.22l2.5-1c.5.34 1.04.65 1.6.9l.4 2.6a.5.5 0 0 0 .5.42h4c.24 0 .44-.17.5-.4l.4-2.6c.56-.24 1.08-.56 1.6-.9l2.5 1c.26.12.56.02.7-.22l2-3.4a.5.5 0 0 0-.12-.64l-2.1-1.6z" fill="currentColor"/>
+        </svg>
+      </button>
 
-    const WATER_PER_SEA = 200;
-    const SEAS_PER_OCEAN = 50;
-    const MAX_OCEANS = 5;
+      <!-- Settings modal (centered) -->
+      <div id="settings-modal" class="settings-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settings-title">
+        <div class="settings-card" role="document">
+          <header class="settings-card-header">
+            <h2 id="settings-title">Settings</h2>
+            <button id="settings-close" class="settings-close" type="button" aria-label="Close settings">✕</button>
+          </header>
 
-    const CONVERT_WATER = 100;
-    const CONVERT_LINS = 10;
+          <div class="settings-card-body">
+            <label class="setting-row">
+              <div class="setting-label">Sound</div>
+              <div class="setting-control">
+                <input id="sound-toggle" type="checkbox" />
+              </div>
+            </label>
 
-    let dropsPerSecond = 0;
-    const DPS5_COST = 50, DPS5_AMOUNT = 5;
-    const DPS10_COST = 100, DPS10_AMOUNT = 10;
+            <label class="setting-row">
+              <div class="setting-label">Autosave</div>
+              <div class="setting-control">
+                <select id="autosave-select" aria-label="Autosave interval">
+                  <option value="15000">15s</option>
+                  <option value="30000">30s</option>
+                  <option value="45000" selected>45s</option>
+                  <option value="90000">90s</option>
+                </select>
+              </div>
+            </label>
 
-    let perClickBonus = 0;
-    const CLICK5_COST = 50, CLICK5_AMOUNT = 5;
-    const CLICK10_COST = 100, CLICK10_AMOUNT = 10;
-    const BASE_CLICK = 1;
+            <div class="setting-note">Autosave saves your progress automatically to your browser.</div>
 
-    // new sea-costed upgrades
-    const SEA50_DPS_COST = 5, SEA50_DPS_AMOUNT = 50;
-    const SEA50_CLICK_COST = 5, SEA50_CLICK_AMOUNT = 50;
+            <div class="settings-actions">
+              <button id="reset-progress" class="btn btn-danger" type="button">Reset Progress</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    let soundOn = true;
-    let gameOver = false;
+      <div class="status">
+        <div class="life-label">Water Drops</div>
+        <div id="life-count" class="life-count" aria-live="polite">0</div>
+        <div class="meta">
+          <div>Per Click: <span id="per-click">1</span></div>
+          <div>Per Second: <span id="per-second">0</span></div>
+        </div>
+      </div>
 
-    // Canvas & particles
-    let ctx, DPR = Math.max(1, window.devicePixelRatio || 1);
-    function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = Math.round(rect.width * DPR);
-      canvas.height = Math.round(rect.height * DPR);
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
-      ctx = canvas.getContext('2d');
-      ctx.scale(DPR, DPR);
-    }
+      <div class="click-area">
+        <button id="click-btn" class="click-btn" aria-label="Gain water drop by clicking">
+          <!-- Designed water drop SVG -->
+          <div class="drop-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="88" height="88" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+              <defs>
+                <linearGradient id="dropGrad" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#9be7ff"/>
+                  <stop offset="55%" stop-color="#4ec7ff"/>
+                  <stop offset="100%" stop-color="#0ea6e6"/>
+                </linearGradient>
+                <radialGradient id="dropShine" cx="30%" cy="25%" r="50%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.85)"/>
+                  <stop offset="60%" stop-color="rgba(255,255,255,0.12)"/>
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                </radialGradient>
+              </defs>
+              <path d="M32 6c0 0-14 16-14 26a14 14 0 0 0 28 0C46 22 32 6 32 6z" fill="url(#dropGrad)"/>
+              <path d="M38 12c-2 2-6 8-6 8s4 0 6-2c2-2 0-6 0-6z" fill="url(#dropShine)" opacity=".9"/>
+              <ellipse cx="26" cy="40" rx="7" ry="3" fill="rgba(255,255,255,0.08)"/>
+            </svg>
+          </div>
 
-    const particles = [];
-    function spawnParticles(x,y,count=22) {
-      for (let i=0;i<count;i++) {
-        const angle = (Math.random() * Math.PI) - Math.PI/2 + (Math.random()-0.5)*0.8;
-        const speed = 1.6 + Math.random()*6.8;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed * (0.7 + Math.random()*1.2),
-          vy: Math.sin(angle) * speed * (0.7 + Math.random()*1.2) - 2.4,
-          radius: 3 + Math.random()*5,
-          life: 0,
-          maxLife: 32 + Math.random()*28,
-          hue: 190 + Math.random()*40,
-          alpha: 1
-        });
-      }
-    }
+          <div class="drop-text">Water Drop</div>
+        </button>
 
-    function renderParticles() {
-      if (!ctx) return;
-      ctx.clearRect(0,0,canvas.width/DPR, canvas.height/DPR);
-      for (let i = particles.length-1; i>=0; i--) {
-        const p = particles[i];
-        p.vy += 0.18;
-        p.vx *= 0.995;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life++;
-        p.alpha = 1 - p.life / p.maxLife;
-        if (p.alpha < 0) p.alpha = 0;
-        const r = p.radius * (1 - p.life / p.maxLife) * 1.1;
-        ctx.beginPath();
-        const grad = ctx.createRadialGradient(p.x-2, p.y-2, 0, p.x, p.y, r*2);
-        grad.addColorStop(0, `hsla(${p.hue}, 95%, 65%, ${Math.max(0.2, p.alpha)})`);
-        grad.addColorStop(1, `hsla(${p.hue+20}, 95%, 45%, 0)`);
-        ctx.fillStyle = grad;
-        ctx.moveTo(p.x, p.y);
-        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-        ctx.fill();
-        if (p.life > p.maxLife) particles.splice(i,1);
-      }
-    }
+        <div id="effects" class="effects" aria-hidden="true"></div>
+      </div>
 
-    let raf;
-    function loop() { renderParticles(); raf = requestAnimationFrame(loop); }
+      <div class="controls">
+        <div class="small-print">Tip: Buy upgrades from the shop for more efficient clicking!</div>
+      </div>
+    </section>
 
-    // Audio
-    let audioCtx = null;
-    function ensureAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playPop() { if (!soundOn) return; ensureAudio(); const t = audioCtx.currentTime; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(720 + Math.random()*200,t); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.08,t+0.008); g.gain.exponentialRampToValueAtTime(0.001,t+0.45); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+0.5); }
+    <aside class="shop-card" aria-label="Shop">
+      <h2>Shop</h2>
 
-    // Helpers
-    function getClickValue() { return BASE_CLICK + perClickBonus; }
-    function makeRipple() { const r = document.createElement('div'); r.className = 'ripple'; drop.appendChild(r); setTimeout(()=> r.remove(), 750); }
-    function makeSpark(xPct, yPct) { const s = document.createElement('div'); s.className = 'spark'; s.style.left = xPct + '%'; s.style.top = yPct + '%'; drop.appendChild(s); setTimeout(()=> s.remove(), 480); }
-    function pulseBadge(el) { if (!el) return; el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); setTimeout(()=> el.classList.remove('pulse'), 700); }
+      <div class="shop-dropdown">
+  <button id="shop-toggle" class="shop-toggle-btn">🛒 Shop</button>
+  <div id="shop-items" class="shop-items-dropdown" aria-hidden="true"></div>
+</div>
 
-    // Persistence
-    const SAVE_KEY = 'waterclicker_v1';
-    let autosaveInterval = null;
-    function saveState() {
-      try {
-        const state = {
-          score, seas, oceans, lins,
-          dropsPerSecond, perClickBonus,
-          purchases: {
-            dps5: buyDPS5.dataset.purchased === 'true',
-            dps10: buyDPS10.dataset.purchased === 'true',
-            click5: buyClick5.dataset.purchased === 'true',
-            click10: buyClick10.dataset.purchased === 'true',
-            seaDps50: buySeaDPS50.dataset.purchased === 'true',
-            seaClick50: buySeaClick50.dataset.purchased === 'true'
-          },
-          timestamp: Date.now()
-        };
-        localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-      } catch (err) {
-        console.warn('Save failed', err);
-      }
-    }
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(SAVE_KEY);
-        if (!raw) return;
-        const s = JSON.parse(raw);
-        if (!s) return;
-        score = Number(s.score) || 0;
-        seas = Number(s.seas) || 0;
-        oceans = Number(s.oceans) || 0;
-        lins = Number(s.lins) || 0;
-        dropsPerSecond = Number(s.dropsPerSecond) || 0;
-        perClickBonus = Number(s.perClickBonus) || 0;
-        if (s.purchases) {
-          if (s.purchases.dps5) { buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true; }
-          if (s.purchases.dps10) { buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true; }
-          if (s.purchases.click5) { buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true; }
-          if (s.purchases.click10) { buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true; }
-          if (s.purchases.seaDps50) { buySeaDPS50.dataset.purchased = 'true'; buySeaDPS50.textContent = 'Purchased'; buySeaDPS50.disabled = true; }
-          if (s.purchases.seaClick50) { buySeaClick50.dataset.purchased = 'true'; buySeaClick50.textContent = 'Purchased'; buySeaClick50.disabled = true; }
-        }
-      } catch (err) {
-        console.warn('Load failed', err);
-      }
-    }
-    function startAutosave() { if (autosaveInterval) clearInterval(autosaveInterval); autosaveInterval = setInterval(saveState, 30000); }
-    window.addEventListener('beforeunload', saveState);
 
-    // Conversions
-    function checkConversions() {
-      if (gameOver) return;
-      let converted = false;
-      while (score >= WATER_PER_SEA && oceans < MAX_OCEANS) {
-        score -= WATER_PER_SEA;
-        seas += 1;
-        converted = true;
-        pulseBadge(seaBadge);
-      }
-      while (seas >= SEAS_PER_OCEAN && oceans < MAX_OCEANS) {
-        seas -= SEAS_PER_OCEAN;
-        oceans += 1;
-        converted = true;
-        pulseBadge(oceanBadge);
-      }
-      if (converted) {
-        updateAfterScoreChange();
-        if (oceans >= MAX_OCEANS) {
-          oceans = MAX_OCEANS;
-          endGame();
-        }
-      }
-    }
+    </aside>
+  </main>
 
-    function endGame() {
-      gameOver = true;
-      drop.setAttribute('aria-disabled', 'true');
-      drop.style.cursor = 'default';
-      drop.removeEventListener('pointerdown', onPointerDownWrapped);
-      drop.tabIndex = -1;
-      const rect = canvas.getBoundingClientRect();
-      spawnParticles(rect.width/2, rect.height/4, 160);
-      if (soundOn) {
-        ensureAudio();
-        const t = audioCtx.currentTime;
-        const o1 = audioCtx.createOscillator(); const o2 = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o1.type='sine'; o2.type='sine'; o1.frequency.setValueAtTime(240,t); o2.frequency.setValueAtTime(360,t);
-        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.14,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+1.8);
-        o1.connect(g); o2.connect(g); g.connect(audioCtx.destination); o1.start(t); o2.start(t); o1.stop(t+1.9); o2.stop(t+1.9);
-      }
-      saveState();
-    }
+  <!-- Decorative ocean layer (bottom) using inline SVG for realistic layered waves -->
+  <div class="ocean" aria-hidden="true">
+    <svg class="ocean-svg" viewBox="0 0 1600 300" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <!-- Enhanced deep ocean gradient -->
+        <linearGradient id="g-back" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0a4a6a"/>
+          <stop offset="40%" stop-color="#063d5a"/>
+          <stop offset="70%" stop-color="#052d42"/>
+          <stop offset="100%" stop-color="#021a28"/>
+        </linearGradient>
+        
+        <!-- Enhanced mid ocean gradient -->
+        <linearGradient id="g-mid" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0d5a7a"/>
+          <stop offset="35%" stop-color="#0a4d6a"/>
+          <stop offset="65%" stop-color="#063d55"/>
+          <stop offset="100%" stop-color="#042a3a"/>
+        </linearGradient>
+        
+        <!-- Enhanced front ocean gradient with cyan highlights -->
+        <linearGradient id="g-front" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#1a6b8a"/>
+          <stop offset="25%" stop-color="#0f5a75"/>
+          <stop offset="50%" stop-color="#0a4a65"/>
+          <stop offset="75%" stop-color="#063a55"/>
+          <stop offset="100%" stop-color="#042a40"/>
+        </linearGradient>
 
-    // Click handling
-    function handleCollect(clientX, clientY) {
-      if (gameOver) return;
-      const rect = canvas.getBoundingClientRect();
-      const wrapRect = drop.getBoundingClientRect();
-      const cx = (wrapRect.left + wrapRect.width/2 - rect.left);
-      const cy = (wrapRect.top + wrapRect.height/2 - rect.top);
-      spawnParticles(cx, cy, Math.min(40, getClickValue()*2));
-      drop.classList.add('wobble'); setTimeout(()=> drop.classList.remove('wobble'), 520);
-      makeRipple();
-      const localX = clientX - wrapRect.left;
-      const localY = clientY - wrapRect.top;
-      const xPct = Math.max(6, Math.min(94, (localX / wrapRect.width) * 100));
-      const yPct = Math.max(8, Math.min(94, (localY / wrapRect.height) * 100));
-      makeSpark(xPct, yPct);
-      playPop();
-      score += getClickValue();
-      updateAfterScoreChange();
-    }
+        <!-- Enhanced foam gradient with sparkle -->
+        <linearGradient id="foam" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="rgba(255,255,255,1)" />
+          <stop offset="15%" stop-color="rgba(200,240,255,0.95)" />
+          <stop offset="35%" stop-color="rgba(255,255,255,0.6)" />
+          <stop offset="60%" stop-color="rgba(180,230,255,0.4)" />
+          <stop offset="85%" stop-color="rgba(255,255,255,0.25)" />
+          <stop offset="100%" stop-color="rgba(150,220,255,0.1)" />
+        </linearGradient>
 
-    function onPointerDownWrapped(ev) {
-      ev.preventDefault();
-      const clientX = (ev.touches && ev.touches[0]) ? ev.touches[0].clientX : ev.clientX;
-      const clientY = (ev.touches && ev.touches[0]) ? ev.touches[0].clientY : ev.clientY;
-      handleCollect(clientX, clientY);
-    }
-    drop.addEventListener('pointerdown', onPointerDownWrapped);
-    drop.addEventListener('keydown', (e) => { if (gameOver) return; if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); const r = drop.getBoundingClientRect(); handleCollect(r.left + r.width/2, r.top + r.height/2); } });
+        <!-- Wave highlight gradient for depth -->
+        <linearGradient id="wave-highlight" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="rgba(122,252,255,0.25)" />
+          <stop offset="30%" stop-color="rgba(122,252,255,0.12)" />
+          <stop offset="60%" stop-color="rgba(122,252,255,0.05)" />
+          <stop offset="100%" stop-color="rgba(122,252,255,0)" />
+        </linearGradient>
 
-    function updateAfterScoreChange() { scoreEl.textContent = score; updateCountBar(); updateBadgesUI(); checkConversions(); refreshShopState(); }
-    function updateCountBar() { const pct = Math.min(100, Math.round((score / WATER_PER_SEA) * 100)); countFill.style.width = pct + '%'; countBar.setAttribute('aria-valuenow', String(Math.min(score, WATER_PER_SEA))); countLabelLeft.textContent = `${score} water`; countLabelRight.textContent = `${Math.min(score, WATER_PER_SEA)} / ${WATER_PER_SEA}`; }
-    function updateBadgesUI() { seaCountEl.textContent = seas; oceanCountEl.textContent = oceans; linsCountEl.textContent = lins; dpsPill.textContent = `${dropsPerSecond} /sec`; clickPill.textContent = `${getClickValue()} per click`; }
+        <!-- Back layer blur for depth -->
+        <filter id="waveBlur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="8" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
 
-    // DPS tick
-    setInterval(() => {
-      if (dropsPerSecond > 0 && !gameOver) {
-        score += dropsPerSecond;
-        const rect = canvas.getBoundingClientRect();
-        spawnParticles(rect.width/2, rect.height/2, Math.min(12, dropsPerSecond));
-        updateAfterScoreChange();
-      }
-    }, 1000);
+        <!-- Glow filter for front waves -->
+        <filter id="waveGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
 
-    // Converter
-    function updateConvertButton() { const canConvert = score >= CONVERT_WATER && !gameOver; convertBtn.disabled = !canConvert; shopWaterCount.textContent = score; }
-    convertBtn.addEventListener('click', () => {
-      if (score < CONVERT_WATER) { shopStatus.textContent = `Not enough water — need ${CONVERT_WATER} drops.`; updateConvertButton(); return; }
-      score -= CONVERT_WATER; lins += CONVERT_LINS;
-      shopStatus.textContent = `Converted ${CONVERT_WATER} water → +${CONVERT_LINS} Lins`;
-      playPop(); pulseBadge(linsBadge);
-      updateAfterScoreChange(); updateConvertButton();
-      const rect = canvas.getBoundingClientRect(); spawnParticles(rect.width/2, rect.height/2, 34);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1400);
-    });
+      <!-- Deep background layer -->
+      <g class="wave-layer" id="wave-back" data-speed="0.22" filter="url(#waveBlur)">
+        <path class="wave-path wave-back-path" fill="url(#g-back)"></path>
+      </g>
 
-    // Shop open/close
-    function openShop() { shopOverlay.classList.add('show'); shopOverlay.setAttribute('aria-hidden','false'); shopClose.focus(); drop.setAttribute('aria-disabled','true'); drop.style.cursor='default'; shopWaterCount.textContent = score; updateConvertButton(); updateBuyButtonsState(); shopStatus.textContent = 'The shop is open.'; }
-    function closeShop() { shopOverlay.classList.remove('show'); shopOverlay.setAttribute('aria-hidden','true'); if (!gameOver) { drop.setAttribute('aria-disabled','false'); drop.style.cursor=''; } marketBtn.focus(); }
-    marketBtn.addEventListener('click', openShop); shopClose.addEventListener('click', closeShop);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && shopOverlay.classList.contains('show')) closeShop(); });
-    shopOverlay.addEventListener('pointerdown', (e) => { if (e.target === shopOverlay) closeShop(); });
+      <!-- Mid layer -->
+      <g class="wave-layer" id="wave-mid" data-speed="0.5">
+        <path class="wave-path wave-mid-path" fill="url(#g-mid)"></path>
+        <path class="wave-highlight-path wave-mid-highlight" fill="url(#wave-highlight)"></path>
+      </g>
 
-    // Shop purchases & sea-priced items
-    function notEnoughMsg() { return "you dont have enough lins! come back later!"; }
-    function notEnoughSeasMsg() { return "you dont have enough seas!"; }
+      <!-- Front layer with glow -->
+      <g class="wave-layer" id="wave-front" data-speed="0.9" filter="url(#waveGlow)">
+        <path class="wave-path wave-front-path" fill="url(#g-front)"></path>
+        <path class="wave-highlight-path wave-front-highlight" fill="url(#wave-highlight)"></path>
+        <path class="wave-foam" stroke="url(#foam)" stroke-width="3" fill="none" opacity="1"></path>
+      </g>
 
-    function updateBuyButtonsState() {
-      buyDPS5.disabled = (lins < DPS5_COST) || buyDPS5.dataset.purchased === 'true' || gameOver;
-      buyDPS10.disabled = (lins < DPS10_COST) || buyDPS10.dataset.purchased === 'true' || gameOver;
-      buyClick5.disabled = (lins < CLICK5_COST) || buyClick5.dataset.purchased === 'true' || gameOver;
-      buyClick10.disabled = (lins < CLICK10_COST) || buyClick10.dataset.purchased === 'true' || gameOver;
+      <!-- Reflective gloss overlay -->
+      <rect class="ocean-gloss" x="0" y="0" width="100%" height="100%" fill="url(#wave-highlight)" opacity="0.15"></rect>
+    </svg>
+  </div>
 
-      // sea-costed items use seas
-      buySeaDPS50.disabled = (seas < SEA50_DPS_COST) || buySeaDPS50.dataset.purchased === 'true' || gameOver;
-      buySeaClick50.disabled = (seas < SEA50_CLICK_COST) || buySeaClick50.dataset.purchased === 'true' || gameOver;
-    }
+  <footer class="footer">
+    <div>Made with ❤️ — Life Clicker</div>
+    <div class="credits">v1.0</div>
+  </footer>
 
-    // lins-priced purchases
-    buyDPS5.addEventListener('click', () => {
-      if (buyDPS5.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (lins < DPS5_COST) { shopStatus.textContent = notEnoughMsg(); return; }
-      lins -= DPS5_COST; dropsPerSecond += DPS5_AMOUNT;
-      buyDPS5.dataset.purchased = 'true'; buyDPS5.textContent = 'Purchased'; buyDPS5.disabled = true;
-      shopStatus.textContent = `Purchased +${DPS5_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 48);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    buyDPS10.addEventListener('click', () => {
-      if (buyDPS10.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (lins < DPS10_COST) { shopStatus.textContent = notEnoughMsg(); return; }
-      lins -= DPS10_COST; dropsPerSecond += DPS10_AMOUNT;
-      buyDPS10.dataset.purchased = 'true'; buyDPS10.textContent = 'Purchased'; buyDPS10.disabled = true;
-      shopStatus.textContent = `Purchased +${DPS10_AMOUNT} drops/sec!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 68);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    buyClick5.addEventListener('click', () => {
-      if (buyClick5.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (lins < CLICK5_COST) { shopStatus.textContent = notEnoughMsg(); return; }
-      lins -= CLICK5_COST; perClickBonus += CLICK5_AMOUNT;
-      buyClick5.dataset.purchased = 'true'; buyClick5.textContent = 'Purchased'; buyClick5.disabled = true;
-      shopStatus.textContent = `Purchased +${CLICK5_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 48);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    buyClick10.addEventListener('click', () => {
-      if (buyClick10.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (lins < CLICK10_COST) { shopStatus.textContent = notEnoughMsg(); return; }
-      lins -= CLICK10_COST; perClickBonus += CLICK10_AMOUNT;
-      buyClick10.dataset.purchased = 'true'; buyClick10.textContent = 'Purchased'; buyClick10.disabled = true;
-      shopStatus.textContent = `Purchased +${CLICK10_AMOUNT} drops per click!`; playPop(); pulseBadge(linsBadge); updateBadgesUI(); updateConvertButton();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 68);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    // sea-costed purchases (new)
-    buySeaDPS50.addEventListener('click', () => {
-      if (buySeaDPS50.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (seas < SEA50_DPS_COST) { shopStatus.textContent = notEnoughSeasMsg(); return; }
-      seas -= SEA50_DPS_COST;
-      dropsPerSecond += SEA50_DPS_AMOUNT;
-      buySeaDPS50.dataset.purchased = 'true';
-      buySeaDPS50.textContent = 'Purchased';
-      buySeaDPS50.disabled = true;
-      shopStatus.textContent = `Purchased +${SEA50_DPS_AMOUNT} drops/sec (spent ${SEA50_DPS_COST} seas)!`;
-      playPop(); pulseBadge(seaBadge); updateBadgesUI();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 96);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    buySeaClick50.addEventListener('click', () => {
-      if (buySeaClick50.dataset.purchased === 'true') { shopStatus.textContent = 'You already purchased this upgrade.'; return; }
-      if (seas < SEA50_CLICK_COST) { shopStatus.textContent = notEnoughSeasMsg(); return; }
-      seas -= SEA50_CLICK_COST;
-      perClickBonus += SEA50_CLICK_AMOUNT;
-      buySeaClick50.dataset.purchased = 'true';
-      buySeaClick50.textContent = 'Purchased';
-      buySeaClick50.disabled = true;
-      shopStatus.textContent = `Purchased +${SEA50_CLICK_AMOUNT} drops per click (spent ${SEA50_CLICK_COST} seas)!`;
-      playPop(); pulseBadge(seaBadge); updateBadgesUI();
-      spawnParticles(canvas.getBoundingClientRect().width/2, canvas.getBoundingClientRect().height/2, 96);
-      saveState();
-      setTimeout(()=> { shopStatus.textContent = 'The shop is open.'; }, 1600);
-    });
-
-    function refreshShopState() {
-      if (shopOverlay.classList.contains('show')) {
-        shopWaterCount.textContent = score;
-        updateConvertButton();
-        updateBuyButtonsState();
-      }
-    }
-
-    // Reset & start
-    function resetGame() {
-      score = 0; seas = 0; oceans = 0; lins = 0; dropsPerSecond = 0; perClickBonus = 0; gameOver = false;
-      scoreEl.textContent = '0';
-      updateCountBar(); updateBadgesUI();
-      drop.setAttribute('aria-disabled', 'false'); drop.style.cursor = ''; drop.addEventListener('pointerdown', onPointerDownWrapped); drop.tabIndex = 0;
-      [buyDPS5, buyDPS10, buyClick5, buyClick10, buySeaDPS50, buySeaClick50].forEach(b => {
-        b.dataset.purchased = 'false';
-        if (b) {
-          if (b === buyDPS5) b.textContent = 'Buy (50 Lins)';
-          if (b === buyDPS10) b.textContent = 'Buy (100 Lins)';
-          if (b === buyClick5) b.textContent = 'Buy (50 Lins)';
-          if (b === buyClick10) b.textContent = 'Buy (100 Lins)';
-          if (b === buySeaDPS50) b.textContent = 'Buy (5 Seas)';
-          if (b === buySeaClick50) b.textContent = 'Buy (5 Seas)';
-          b.disabled = false;
-        }
-      });
-      updateBuyButtonsState();
-      try { localStorage.removeItem(SAVE_KEY); } catch (err) {}
-    }
-
-    function makeBubbles() {
-      const count = 18;
-      for (let i=0;i<count;i++) {
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        const size = 60 + Math.random()*260;
-        b.style.width = size + 'px';
-        b.style.height = size + 'px';
-        const left = Math.random()*100;
-        const top = 30 + Math.random()*60;
-        b.style.left = left + '%';
-        b.style.top = top + '%';
-        b.style.background = `radial-gradient(circle at 30% 30%, rgba(102,197,255,0.24), rgba(66,148,255,0.05) 40%, rgba(0,0,0,0) 70%)`;
-        b.style.animationDuration = (24 + Math.random()*36) + 's';
-        b.style.opacity = (0.06 + Math.random()*0.14);
-        bubblesContainer.appendChild(b);
-      }
-    }
-
-    function start() {
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
-      makeBubbles();
-      loop();
-      loadState();
-      startAutosave();
-      updateCountBar(); updateBadgesUI();
-      [buyDPS5, buyDPS10, buyClick5, buyClick10, buySeaDPS50, buySeaClick50].forEach(b => { if (b && b.dataset.purchased !== 'true') b.dataset.purchased = 'false'; });
-      updateBuyButtonsState();
-    }
-
-    // Touch & audio wake
-    drop.addEventListener('touchstart', (e) => { e.preventDefault(); }, {passive:false});
-    window.addEventListener('pointerdown', function one() { ensureAudio(); window.removeEventListener('pointerdown', one); }, {passive:true});
-
-    start();
-  </script>
+  <script src="main-page.js" defer></script>
 </body>
 </html>
+
+
